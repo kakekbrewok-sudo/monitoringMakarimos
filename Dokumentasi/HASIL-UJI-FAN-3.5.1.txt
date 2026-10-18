@@ -1,0 +1,21 @@
+MINI MONITOR 3.5.1 — FAN BOOST 15 DETIK
+Tanggal: 19 Oktober 2026
+
+Perubahan:
+- Target 100% dipertahankan selama 15 detik; waktu putaran fisik mencapai RPM penuh tergantung kipas.
+- Countdown, menu, aksesibilitas, dan panduan mengikuti durasi 15 detik.
+- Installer menunggu helper hingga 20 detik sebelum memperbarui aplikasi.
+
+Validasi:
+- 23 pemeriksaan backend dengan hardware palsu: durasi 15 detik, pemulihan AUTO/manual, pembatalan, kegagalan parsial, dan penolakan jurnal tidak valid.
+- 70 pemeriksaan UI: empat tema, wide/window/overlay, countdown, aksesibilitas, dan penutupan.
+- Render tombol countdown 15 pada tema Dot Black diperiksa secara visual.
+- Probe read-only release berhasil: NVIDIA GeForce RTX 4060 Ti, 2 kipas, 100% selama 15 detik.
+- Tidak menjalankan boost fisik 15 detik pada pengujian ini. Pemulihan fan pada hardware asli sudah diuji pada versi 3.5.0 dengan durasi 8 detik.
+- Versi 3.5.1 terpasang dan satu proses UI berjalan.
+- Startup, tema, suara, ukuran jendela, dan preferensi sensor tetap tersimpan.
+- Probe sensor versi terpasang berhasil membaca CPU/GPU usage dan suhu.
+- EXE dalam paket ZIP cocok dengan EXE terpasang.
+
+SHA256 MiniMonitor.exe:
+E627ADEAF57A8416A67712CE461AF72628F676A86EDF64472D85DF6299A8E1F5

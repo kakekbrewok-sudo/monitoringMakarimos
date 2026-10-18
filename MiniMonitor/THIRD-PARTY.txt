@@ -1,0 +1,45 @@
+Mini Monitor menggunakan binari dari distribusi resmi LibreHardwareMonitor
+v0.9.6 tanpa modifikasi. Hanya DLL yang diperlukan yang disertakan.
+
+LibreHardwareMonitorLib: Mozilla Public License 2.0.
+https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/tree/v0.9.6
+https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases/tag/v0.9.6
+Lisensi: sensors/LICENSE-LibreHardwareMonitor.txt
+
+PawnIO_setup.exe versi 2.1.0 diambil dari resource resmi LibreHardwareMonitor v0.9.6.
+Tanda tangan Authenticode diverifikasi: Valid, namazso.eu.
+Rilis installer yang disertakan:
+https://github.com/namazso/PawnIO.Setup/releases/tag/2.1.0
+Menurut dokumentasi penulis, edisi binari resmi PawnIO bersifat proprietary;
+redistribusi installer diizinkan. Keterangan lisensi resmi:
+https://github.com/namazso/PawnIO.Modules/wiki/Using-PawnIO-Modules#licensing-considerations
+Edisi kode sumber memakai GPL 2 dengan pengecualian untuk PawnIO dan LGPL 2.1
+untuk PawnIOLib. Berkas lisensi kode sumber tetap disertakan sebagai referensi;
+lisensi tersebut bukan pernyataan bahwa installer binari resmi berlisensi GPL.
+https://github.com/namazso/PawnIO
+https://pawnio.eu
+Modul PawnIO yang digunakan LibreHardwareMonitor tersedia dalam source tree:
+LibreHardwareMonitorLib/Resources/PawnIo
+
+Dependensi sensor:
+DiskInfoToolkit, BlackSharp.Core, RAMSPDToolkit-NDD, HidSharp,
+System.Buffers, System.Memory, System.Numerics.Vectors,
+System.Runtime.CompilerServices.Unsafe.
+Lisensi dependensi disertakan di folder licenses.
+
+Sumber dependensi:
+https://github.com/Blacktempel/DiskInfoToolkit (1.1.2, MPL-2.0)
+https://github.com/Blacktempel/RAMSPDToolkit (RAMSPDToolkit-NDD 1.4.2, MPL-2.0)
+https://github.com/Blacktempel/BlackSharp (BlackSharp.Core 1.0.7, MPL-2.0)
+https://software.seekye.com/hidsharp (2.6.4, lisensi dalam hidsharp-LICENSE.txt)
+https://github.com/dotnet/runtime (library System.*, MIT)
+
+FPS: PresentMon Console 2.6.0 x64, binari resmi tanpa modifikasi.
+https://github.com/GameTechDev/PresentMon/releases/tag/v2.6.0
+https://github.com/GameTechDev/PresentMon/tree/v2.6.0
+Lisensi MIT: licenses/PresentMon-LICENSE.txt
+Binari: fps/PresentMon.exe (980320 bytes).
+SHA256: B2A706BC6AD475749E3B7E3409263AA1E6906D45BDCF993F6DBC0F660188F1AF
+Digest cocok dengan GitHub release; Authenticode Valid, Intel Corporation.
+Mini Monitor memakai ETW untuk presented FPS melalui console saja;
+GUI, service, dan installer PresentMon tidak disertakan.

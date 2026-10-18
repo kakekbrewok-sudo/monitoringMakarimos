@@ -1,0 +1,172 @@
+MINI MONITOR v3.4 - FPS GAME
+12 Oktober 2026
+
+Pembaca: PresentMon Console 2.6.0 x64, rilis Intel resmi.
+Pengujian FPS nyata menggunakan fixture Direct3D9, bukan game komersial.
+Angka RAM/CPU di bawah hanya hasil pada fixture dan komputer ini.
+
+PARSER DAN PREFERENSI
+PASS: 60 FPS parsed from event timestamps under Indonesian locale
+PASS: frames from other process IDs ignored
+PASS: swap chains are not added together
+PASS: malformed, duplicate and invalid samples ignored
+PASS: stale FPS clears instead of displaying a frozen value
+PASS: new capture header clears old samples
+PASS: rate uses total frame time rather than average of inverted times
+PASS: history memory bounded across extreme FPS and many swap chains
+PASS: Steam game path recognized automatically
+PASS: Epic game path recognized automatically
+PASS: Riot game path recognized automatically
+PASS: launchers excluded from automatic capture
+PASS: ordinary browser does not start a helper
+PASS: manual game selection persists with Unicode and equals signs
+PASS: explicit exclusion overrides selection
+PASS: automatic game detection can be disabled per application
+PASS: damaged preference does not crash or capture unknown process
+PASS: idle monitoring starts no helper process
+PASS: missing component fails quietly with diagnostic status
+PASS: shutdown leaves no helper
+
+DURASI APLIKASI
+PASS: pause on desktop/overlay without counting background
+PASS: switch back resumes per-process total
+PASS: sleep or long timer gap is excluded
+PASS: locked session is excluded
+PASS: resume does not count locked interval
+PASS: PID reuse/new game launch gets a fresh total
+PASS: no reminder before 60 minutes
+PASS: reminder at exactly 60 active minutes
+PASS: acknowledge clears red reminder
+PASS: next reminder after another 60 active minutes
+PASS: reset clears active total and reminder
+PASS: duration does not wrap after 24 hours
+PASS: process age stays independent of foreground duration
+PASS: unreadable start time stays unavailable
+PASS: backward clock adjustment is clamped
+
+FPS LANGSUNG DAN LIFECYCLE
+FPS 59.24
+FPS 60.11
+FPS 60.23
+FPS 59.35
+FPS 60.32
+FPS 60.64
+FPS 59.96
+FPS 60.21
+FPS 60.33
+FPS 60.05
+FPS 60.21
+FPS 60.13
+FPS 60.26
+FPS 60.19
+FPS 60.22
+FPS 60.80
+FPS 59.83
+Status: Membaca frame game...
+PASS: real Direct3D9 frame capture agrees with paced 60 FPS fixture
+Helper peak working set: 10.1 MB; helper CPU averaged across all logical processors: 0.036%; host CPU: 0.029%
+PASS: leaving game clears FPS and stops helper
+PASS: returning to game resumes frame capture
+PASS: closing the game terminates capture and clears FPS
+PASS: asynchronous shutdown completes
+Session: MiniMonitor-FPS-2848-c9ca7a1e152a4f5fbcb519952837d7ea
+
+Presents: 1671; seconds: 27.860; actual average: 59.98
+MENU FPS DAN EMPAT TEMA
+PASS: automatic Steam game checked in FPS menu
+PASS: FPS submenu survives live sensor and clock updates
+PASS: disable game without dismissing menu
+PASS: enable game without dismissing menu
+PASS: FPS off keeps menu open
+PASS: FPS on keeps menu open
+PASS: FPS toggles do not resize, move or recreate overlay
+PASS: FPS selections saved alongside existing preferences
+PASS: game preference restores through settings parser
+PASS: no hover tooltips added
+PASS: four themes rendered with simulated FPS and long-name cases
+
+REGRESI MENU TRAY DENGAN TIMER
+PASS: live sensor polling started
+PASS: DotBlack: theme submenu remains open across live clock/sensor updates
+PASS: DotBlack: clock and sensors continue while selecting themes
+PASS: DotBlack: correct theme without moving or recreating window
+PASS: DotWhite: theme submenu remains open across live clock/sensor updates
+PASS: DotWhite: clock and sensors continue while selecting themes
+PASS: DotWhite: correct theme without moving or recreating window
+PASS: KanjiArt: theme submenu remains open across live clock/sensor updates
+PASS: KanjiArt: clock and sensors continue while selecting themes
+PASS: KanjiArt: correct theme without moving or recreating window
+PASS: GShock: theme submenu remains open across live clock/sensor updates
+PASS: GShock: clock and sensors continue while selecting themes
+PASS: GShock: correct theme without moving or recreating window
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+Pinned window / root: opened foreground=0 pid=0 active=133116
+PASS: Pinned window / root: tray context menu opens
+PASS: Pinned window / root: real clock and sensor timers keep updating
+Pinned window / root: root visible=True, submenu visible=n/a
+PASS: Pinned window / root: menu survives multiple live refreshes
+PASS: Pinned window / root: window handle remains stable
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+PASS: Pinned window / root: Escape can still dismiss
+Pinned window / sound submenu: opened foreground=0 pid=0 active=133116
+PASS: Pinned window / sound submenu: tray context menu opens
+PASS: Pinned window / sound submenu: real clock and sensor timers keep updating
+Pinned window / sound submenu: root visible=True, submenu visible=True
+PASS: Pinned window / sound submenu: menu survives multiple live refreshes
+PASS: Pinned window / sound submenu: window handle remains stable
+PASS: Pinned window / sound submenu: delayed click is usable and updates check mark
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+PASS: Pinned window / sound submenu: Escape can still dismiss
+Monitor activated foreground=0 pid=0 active=458896
+Overlay / sound submenu: opened foreground=0 pid=0 active=133116
+PASS: Overlay / sound submenu: tray context menu opens
+PASS: Overlay / sound submenu: real clock and sensor timers keep updating
+Overlay / sound submenu: root visible=True, submenu visible=True
+PASS: Overlay / sound submenu: menu survives multiple live refreshes
+PASS: Overlay / sound submenu: window handle remains stable
+PASS: Overlay / sound submenu: delayed click is usable and updates check mark
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+PASS: Overlay / sound submenu: Escape can still dismiss
+Hidden in tray / sound submenu: opened foreground=0 pid=0 active=133116
+PASS: Hidden in tray / sound submenu: tray context menu opens
+PASS: Hidden in tray / sound submenu: real clock and sensor timers keep updating
+Hidden in tray / sound submenu: root visible=True, submenu visible=True
+PASS: Hidden in tray / sound submenu: menu survives multiple live refreshes
+PASS: Hidden in tray / sound submenu: window handle remains stable
+PASS: Hidden in tray / sound submenu: delayed click is usable and updates check mark
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+PASS: Hidden in tray / sound submenu: Escape can still dismiss
+PASS: background refresh does not reshow the hidden overlay
+Normal menu mode / root: opened foreground=0 pid=0 active=133116
+PASS: Normal menu mode / root: tray context menu opens
+PASS: Normal menu mode / root: real clock and sensor timers keep updating
+Normal menu mode / root: root visible=True, submenu visible=n/a
+PASS: Normal menu mode / root: menu survives multiple live refreshes
+PASS: Normal menu mode / root: window handle remains stable
+Menu closed: Keyboard foreground=0 pid=0 active=133116
+PASS: Normal menu mode / root: Escape can still dismiss
+Menu closed: AppFocusChange foreground=0 pid=0 active=133116
+PASS: normal menu mode closes only after selecting an option
+
+Pratinjau empat tema diperiksa visual, termasuk nama panjang dan 9999 FPS.
+Full-screen eksklusif dan kompatibilitas game tertentu belum diuji.
+
+PEMASANGAN DAN SENSOR AKTUAL
+PASS: installed EXE and FPS reader match verified package
+PASS: startup enabled and existing action preserved
+PASS: installed Mini Monitor running, PID 18712
+PASS: pre-update position, theme, sound and sensor preferences preserved
+PASS: CPU/GPU usage and temperatures available in installed 3.4 build
+PASS: both SSD temperature sensors available
+Installed SHA256: F3CE68E0FDAF94325781C34CD39CA80BCB765F1F65000AB78A11CE0BAF6459A1
+
+Mini Monitor 3.4 | 2026-10-12T23:20:53
+Administrator: True | PawnIO installed: True
+RAM: 14.79/31.59 GB (46%)
+CPU | AMD Ryzen 5 7500F | Core (Tctl/Tdie) | 62.8 C | Load 34.6% (CPU Total) | 
+GPU | NVIDIA GeForce RTX 4060 Ti | GPU Core | 76.0 C | Load 98.0% (GPU Core) | 
+SSD | PNY CS2340 1TB SSD | Composite Temperature | 55.0 C | Load n/a | 
+SSD | XPG GAMMIX S70 BLADE | Composite Temperature | 62.0 C | Load n/a | 
+HDD | TOSHIBA MQ01ABD050 | Temperature | 41.0 C | Load n/a | 
+
+ZIP aplikasi 3.4 berisi 30 berkas dan seluruh hash cocok dengan folder runtime.

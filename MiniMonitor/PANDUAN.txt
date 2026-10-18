@@ -1,0 +1,218 @@
+MINI MONITOR (v3.5.2)
+
+INSTALLER OFFLINE
+Jalankan MiniMonitor-Setup-3.5.2-x64.exe untuk memasang atau memperbarui.
+Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
+Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
+hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
+Gunakan akun Windows administrator yang akan memakai aplikasi; installer
+membatalkan elevasi dengan akun berbeda agar profil tidak tertukar.
+Windows 10 versi 2004+ atau Windows 11 x64 (Intel/AMD), .NET Framework 4.7.2+.
+Saat update, aplikasi ditutup dengan baik dan pemulihan kipas ditunggu.
+Jika aplikasi belum selesai ditutup, update dibatalkan untuk dicoba lagi.
+Pengaturan tema, suara, ukuran jendela, dan pilihan startup tetap disimpan.
+Startup mengikuti mode window/overlay terakhir, tanpa memaksa overlay.
+Untuk uninstall: Windows Settings > Apps > Installed apps > Mini Monitor.
+Pengaturan pribadi serta PawnIO tetap tersimpan. File uninstaller yang
+sedang dipakai dibersihkan saat restart Windows; pemasangan ulang dapat
+dilakukan sebelum restart.
+
+Versi 3.4.6: tema putih memakai angka jam utuh merah, durasi aplikasi lebih jelas, dan aksen merah pada pengingat.
+
+Versi 3.4.5: jendela lebar dan pendek memakai tiga kolom dengan angka besar. Warna title bar mengikuti tema pada Windows 11. Layout vertikal dan overlay tetap tersedia otomatis sesuai ukuran.
+
+Mode jendela: matikan Mode overlay, lalu tarik tepi/sudut untuk mengubah ukuran. Mendukung maximize, minimize ke taskbar, dan Snap Windows (Win+panah). Jam dan teks mengikuti ukuran jendela; ukuran terakhir dan status maximize tersimpan terpisah dari ukuran overlay.
+Jam, durasi aplikasi, FPS game, RAM, usage CPU/GPU, suhu, dan bunyi singkat.
+
+MULAI DAN STARTUP WINDOWS
+Jalankan Pasang-Otomatis.cmd sekali, lalu izinkan UAC.
+Aplikasi dipasang ke C:\Program Files\MiniMonitor dan dibuka langsung.
+Task Scheduler membuka mode terakhir pada setiap login akun Windows yang memasang.
+Task menggunakan sesi interaktif dan izin administrator agar sensor tersedia;
+setelah pemasangan, tidak ada permintaan UAC pada setiap login.
+Pemasangan tidak membutuhkan restart Windows.
+Untuk memperbarui versi yang sudah terpasang, jalankan Perbarui-Aplikasi.cmd.
+Pilihan startup, mode jendela/overlay, posisi, dan interval tetap dipertahankan.
+
+Aktif/nonaktifkan startup: klik kanan overlay > Muncul saat login Windows.
+Nonaktifkan-Startup.cmd juga tersedia. Pilihan ini tidak menghapus aplikasi.
+Untuk menjalankan portable, buka MiniMonitor.exe dari folder ZIP yang sudah
+diekstrak lengkap. Aplikasi akan meminta akses administrator untuk sensor.
+Hanya satu instans berjalan dalam sesi pengguna yang sama.
+
+TAMPILAN DAN KONTROL
+Empat tema digambar langsung oleh aplikasi. Klik kanan overlay atau ikon tray
+> Tema, lalu pilih:
+- Dot Hitam (default): tampilan dot-matrix asli, hitam dengan aksen merah.
+- Dot Putih: permukaan putih, jam angka utuh merah, dan teks gelap.
+- Kanji Art: poster tipografi biru-merah di atas kertas krem, huruf Jepang,
+  judul tebal, dan angka jam monospace tanpa dot.
+- G-Shock: bezel gelap bersudut, layar LCD kehijauan, angka tujuh segmen,
+  dan bar pemakaian RAM/CPU/GPU, terinspirasi jam digital tahan benturan.
+Pilihan tema langsung berlaku dan disimpan untuk pembukaan/login berikutnya.
+Dot Hitam dipakai jika belum ada pilihan tema. Ukuran dan posisi tetap sama
+saat berganti tema, dan menu tetap dapat digunakan selama timer berjalan.
+Semua tema memakai timer satu detik yang sudah ada, tanpa animasi halus
+atau timer tambahan. Font bawaan Windows dimuat sekali dan dipakai ulang.
+Tidak perlu memasang font, browser, atau webview. Tidak ada tooltip hover.
+Jam mengikuti waktu dan zona waktu Windows, format 24 jam.
+
+- Geser overlay dengan tombol kiri mouse.
+- Klik kanan untuk menu dan Keluar.
+- Menu tetap terbuka (default aktif): ubah beberapa pengaturan tanpa membuka
+  menu ulang. Berlaku juga untuk submenu suara, pembaruan, dan opasitas;
+  centang diperbarui langsung. Klik di luar atau tekan Esc untuk menutup.
+  Jam dan sensor tetap diperbarui saat menu tray terbuka; pembaruan rutin
+  tidak mengaktifkan ulang jendela atau menutup menu.
+  Nonaktifkan opsi ini untuk perilaku menu Windows biasa.
+  Tampilkan/buka kunci, diagnostik, pemasangan driver, restart, dan Keluar
+  tetap menutup menu ketika dipilih.
+- Ctrl+Alt+O: pindah overlay/jendela biasa.
+- Ctrl+Alt+L: kunci/buka kunci klik tembus.
+- Klik dua kali ikon tray untuk membuka kunci dan menampilkan overlay.
+- Ikon tray/aplikasi memakai monogram M dot putih dengan titik merah.
+  Ikon statis tersedia pada beberapa ukuran, dimuat sekali dari executable.
+- Opasitas tersedia pada menu klik kanan.
+- Mendukung desktop dan game borderless/windowed; fullscreen eksklusif
+  tidak didukung oleh jenis overlay desktop ini.
+
+FPS GAME
+FPS tampil di samping nama game pada keempat tema. Tidak menambah tinggi
+overlay. Klik kanan overlay/tray > FPS game > Aktifkan FPS untuk on/off.
+
+Game pada lokasi umum Steam (steamapps\common), Epic Games, Riot Games,
+GOG Games, EA Games, Origin Games, Ubisoft Game Launcher\games,
+serta folder Games dan XboxGames
+(misalnya D:\Games\Nama Game) dikenali dari lokasi executable.
+Launcher/helper umum dikecualikan. Ini bukan daftar lengkap semua game.
+Untuk game di folder lain: buka game, klik kanan overlay/tray > FPS game >
+Pantau FPS: [nama game]. Pilihan diingat untuk pembukaan game berikutnya.
+Pilihan yang sama juga dapat mematikan pemantauan game yang terdeteksi otomatis.
+Nama pada pilihan menu mengikuti aplikasi yang terpantau ketika menu dibuka.
+Identitas game dibaca melalui informasi proses terbatas, sehingga game seperti
+EA FC yang menolak akses modul tetap dapat dikenali jika Windows mengizinkan
+pembacaan lokasi executable. Tidak membaca memori atau mengubah proteksi game.
+
+Angka adalah presented FPS aplikasi, dihitung dari interval frame selama
+sekitar satu detik. Bukan refresh rate monitor, bukan perkiraan dari usage,
+dan tidak menjanjikan jumlah frame hasil frame generation yang terlihat.
+Jika game punya beberapa swap chain, dipilih yang paling aktif; tidak dijumlah.
+Tampilan diperbarui sekali per detik. Tanda — berarti menunggu frame atau
+frame tidak tersedia; nilai lama dibuang ketika datanya berhenti datang.
+
+Sesi FPS DirectX disiapkan sejak Mini Monitor menyala. Saat menganggur,
+provider frame dinonaktifkan. Saat game aktif, hanya PID game itu yang dipantau.
+Alt+Tab menghentikan pengambilan frame; sesi kecil tetap siap untuk kembali.
+PresentMon menjadi pembaca cadangan untuk game tanpa event DirectX tersebut.
+Proses cadangan hanya berjalan saat diperlukan oleh game yang dipantau.
+Saat menu tray/overlay terbuka, target tetap agar pemilihan menu stabil.
+Tidak menyimpan log frame ke disk, tidak memasang service tambahan, dan
+tidak menyisipkan DLL ke game. Izin administrator dipakai seperti sensor CPU.
+Jika belum terbaca, periksa menu FPS dan Simpan diagnostik. EA AntiCheat dapat
+menolak pembuatan sesi baru setelah game berjalan. Tutup game setelah selesai
+bermain, biarkan Mini Monitor aktif, lalu tunggu status "FPS siap sebelum game
+dibuka" pada menu FPS sebelum membuka game kembali. Mini Monitor mencoba
+menyiapkan sesi lagi setiap 10 detik bila sesi sebelumnya ditolak.
+Jalankan Mini Monitor sebagai administrator. Komponen fps\PresentMon.exe
+harus tetap berada bersama paket. Jangan menjalankan komponen itu terpisah.
+
+PresentMon mendukung DirectX/OpenGL/Vulkan, tetapi pembacaan setiap game,
+API, driver, serta fitur frame generation tetap bergantung kompatibilitas.
+Overlay ini ditujukan untuk borderless/windowed, bukan fullscreen eksklusif.
+
+DURASI DAN PENGINGAT
+Nama aplikasi diambil dari metadata program yang sedang di depan layar.
+Judul dokumen, halaman browser, isi layar, dan ketikan tidak dibaca.
+
+AKTIF: total waktu aplikasi benar-benar berada di depan layar sejak Mini Monitor
+mulai memantau. Berpindah aplikasi menjeda hitungan game; kembali ke proses
+game yang sama melanjutkan totalnya. Membuka ulang game membuat sesi baru.
+Menutup/memulai ulang Mini Monitor menghapus hitungan aktif yang belum disimpan;
+riwayat penggunaan tidak ditulis ke disk.
+
+SEJAK DIBUKA: umur proses aplikasi berdasarkan waktu mulai dari Windows.
+Ini tetap berjalan saat aplikasi di background, dan dapat mencakup sleep.
+Jika Windows tidak menyediakan waktu mulai proses, ditampilkan tanda —.
+
+Pengambilan sampel satu detik; pergantian fokus memiliki toleransi sekitar
+satu detik. Windows terkunci, sleep, desktop, dan interaksi dengan overlay
+tidak menambah waktu aktif. Label JEDA tetap menampilkan aplikasi terakhir.
+Untuk aplikasi dengan proses helper/launcher, nama dan waktu mulai mengikuti
+proses yang memiliki jendela aktif. Setiap proses dianggap sesi terpisah.
+
+Setelah 60 menit aktif pada satu sesi aplikasi, durasi dan teks pengingat
+berubah merah. Tidak ada notifikasi popup atau jendela yang merebut fokus.
+Setelah istirahat: klik kanan > Sudah istirahat. Pengingat berikutnya muncul
+pada kelipatan 60 menit aktif berikutnya. Reset waktu aktif tersedia di menu.
+
+BUNYI SINGKAT (DEFAULT AKTIF)
+- Pergantian jam Windows, misalnya 14:59:59 menjadi 15:00:00:
+  dua nada naik, sekitar 0,56 detik.
+- Durasi AKTIF aplikasi mencapai 1 jam, 2 jam, dan seterusnya:
+  empat ketukan lebih tegas, total sekitar 1,08 detik. Tidak berdasarkan umur
+  proses di background. Bunyi hanya sekali pada setiap batas jam aktif.
+- Jika kedua kejadian bersamaan, pola diputar berurutan dalam 1,82 detik.
+- Nada lebih terdengar dengan awal/akhir halus. Volume akhir
+  tetap mengikuti volume Windows/speaker; aplikasi tidak mengubah mixer.
+- Klik kanan > Suara pengingat: aktif/nonaktifkan masing-masing bunyi secara
+  terpisah, atau pilih Coba bunyi untuk mendengarkannya langsung.
+- Tidak berbunyi saat baru membuka overlay, mengubah jam secara mendadak,
+  terkunci, atau mengejar jam yang terlewat setelah sleep.
+- Saat dimute, bunyi yang terlewat tidak diantrikan untuk diputar nanti.
+- Contoh file WAV ada di Pratinjau\contoh-suara pada workspace pengembangan
+  (di luar ZIP aplikasi). Program membuat dan memuat nada sekali di memori
+  sehingga tidak bergantung pada file contoh.
+
+SENSOR DAN KINERJA
+RAM = pemakaian memori fisik (%), bukan suhu modul RAM.
+CPU dan GPU memakai format persentase usage / suhu, misalnya 58% / 46°C.
+Usage CPU = CPU Total, bukan core yang paling sibuk.
+Usage GPU = GPU Core (fallback D3D 3D jika tidak tersedia), bukan pemakaian VRAM.
+Suhu CPU = package / Tctl-Tdie jika tersedia. Suhu GPU = core jika tersedia.
+Nilai 0% adalah idle; tanda — berarti sensor belum tersedia.
+SSD NVMe = Composite Temperature; batas Warning/Critical tidak dipakai.
+HDD yang menyediakan sensor juga ditampilkan. — berarti belum terbaca.
+Detail nama sensor dan RAM dalam GB tersedia melalui Simpan diagnostik.
+
+Default pembacaan sensor setiap 3 detik (opsi 1/3/5 detik); disk setiap 15 detik.
+Jam dan durasi diperbarui satu kali per detik. Tidak menjalankan proses shell
+berulang untuk memantau aplikasi maupun sensor.
+Driver PawnIO resmi harus terpasang agar suhu CPU bisa dibaca.
+Klik kanan > Perbaiki / pasang driver CPU bila diperlukan pada komputer lain.
+Mulai ulang Mini Monitor untuk mendeteksi drive eksternal yang baru dipasang.
+
+PENGATURAN DAN SUMBER
+Pengaturan posisi/tampilan: %LOCALAPPDATA%\MiniMonitor\MiniMonitor.settings.
+Startup: task MiniMonitor-<SID pengguna> pada Windows Task Scheduler.
+Jika dipasang melalui installer: hapus lewat Installed Apps Windows.
+Untuk paket ZIP lama: nonaktifkan startup, tutup aplikasi, lalu hapus foldernya.
+Driver PawnIO dapat dihapus terpisah melalui Installed Apps Windows.
+
+Kode sumber dipisahkan ke folder Source pada workspace pengembangan,
+sejajar dengan folder MiniMonitor. ZIP hanya berisi aplikasi siap pakai.
+Petunjuk build tersedia di Source\README.md; hasil pengujian sebelumnya
+disimpan di Dokumentasi\HASIL-UJI.txt pada workspace.
+Memerlukan Windows 64-bit dengan .NET Framework 4.7.2 atau lebih baru.
+Desain terinspirasi dot-matrix; bukan produk resmi Nothing.
+Lisensi dan sumber dependensi: THIRD-PARTY.txt dan folder licenses.
+
+PENDINGINAN GPU / TOMBOL ES
+Klik ikon kepingan salju di samping suhu GPU untuk meminta kedua kipas GPU
+NVIDIA ke target 100% selama 15 detik. Hitung mundur tampil di tombol.
+Klik lagi untuk membatalkan. Tersedia juga lewat menu klik kanan.
+
+Sebelum mulai, mode AUTO/manual dan target masing-masing kipas disimpan.
+Setelah selesai, pengaturan itu dipulihkan dan dibaca ulang untuk verifikasi.
+Jika sebelumnya manual 100%, setelah 15 detik tetap manual 100%.
+Kecepatan putaran aktual memerlukan waktu untuk mencapai target driver.
+
+FireStorm boleh tetap terbuka. Jika FireStorm atau aplikasi lain mengganti
+pengaturan selama pendinginan, Mini Monitor membatalkan boost tanpa terus
+menimpa pengaturan tersebut. Kurva software yang aktif dapat membatalkan
+boost; gunakan mode AUTO bawaan driver jika ingin satu pengendali saat boost.
+
+Pembaca kipas hanya hidup saat tombol digunakan. Ia memulihkan pengaturan
+saat dibatalkan atau jendela ditutup. Saat tidak digunakan tidak ada proses
+pembaca kipas tambahan. Tidak mengubah voltage, power limit, atau overclock.
+Dukungan kontrol bergantung GPU/driver; kesalahan ditampilkan saat diklik.
+Lima belas detik bukan jaminan suhu tertentu; efeknya tergantung beban dan airflow.

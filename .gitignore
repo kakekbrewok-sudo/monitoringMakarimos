@@ -1,0 +1,19 @@
+# Local development and test output
+work/
+*.build.json
+*.user
+*.suo
+.vs/
+bin/
+obj/
+
+# Mini Monitor user data and diagnostics
+MiniMonitor.settings
+startup-result.txt
+installed-sensors.txt
+diagnostic*.txt
+
+# OS/editor files
+Thumbs.db
+Desktop.ini
+.DS_Store

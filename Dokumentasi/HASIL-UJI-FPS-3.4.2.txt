@@ -1,0 +1,139 @@
+MINI MONITOR 3.4.2 - FPS EA SPORTS FC 26
+Tanggal: 13 Oktober 2026 (Asia/Jakarta)
+Penyebab: MainModule tidak memberi lokasi FC26; sesi ETW baru ditolak setelah EA AntiCheat aktif, termasuk saat administrator.
+Solusi: QueryFullProcessImageName dengan akses terbatas; sesi DirectX disiapkan sebelum game, hanya provider/PID target aktif, PresentMon menjadi fallback.
+Hasil: penghitungan FPS, lifecycle sesi native, EA FC langsung, menu/tema, dan pemasangan lolos.
+Catatan sumber daya: 32 KB buffer ETW saat fixture idle dan 48 KB pada uji EA FC; ini bukan total RAM aplikasi. Idle CPU 0.000 detik pada sampel 2.5 detik; bukan jaminan nol CPU setiap waktu.
+Referensi: https://github.com/GameTechDev/PresentMon/issues/573
+
+LAPORAN: fps-checks.txt
+PASS: 60 FPS parsed from event timestamps under Indonesian locale
+PASS: frames from other process IDs ignored
+PASS: swap chains are not added together
+PASS: malformed, duplicate and invalid samples ignored
+PASS: stale FPS clears instead of displaying a frozen value
+PASS: new capture header clears old samples
+PASS: rate uses total frame time rather than average of inverted times
+PASS: history memory bounded across extreme FPS and many swap chains
+PASS: successful DirectX presents produce 120 FPS
+PASS: wrong PID, test, failed and occluded presents do not inflate FPS
+PASS: native FPS becomes unavailable after frames stop
+PASS: Steam game path recognized automatically
+PASS: Epic game path recognized automatically
+PASS: Riot game path recognized automatically
+PASS: CONTROL Resonant in a custom Games folder recognized automatically
+PASS: nested Games folder supports mixed case and forward slashes
+PASS: XboxGames installation recognized automatically
+PASS: EA FC Steam installation recognized automatically
+PASS: EA app game installation recognized automatically
+PASS: Origin game installation recognized automatically
+PASS: EA anti-cheat launcher excluded
+PASS: EA app itself excluded even inside a game library
+PASS: partial folder names do not trigger capture
+PASS: custom game launchers excluded from automatic capture
+PASS: saved manual exclusion takes priority over Games folder detection
+PASS: launchers excluded from automatic capture
+PASS: ordinary browser does not start a helper
+PASS: manual game selection persists with Unicode and equals signs
+PASS: explicit exclusion overrides selection
+PASS: automatic game detection can be disabled per application
+PASS: damaged preference does not crash or capture unknown process
+PASS: idle monitoring starts no helper process
+PASS: missing component fails quietly with diagnostic status
+PASS: shutdown leaves no helper
+
+LAPORAN: activity-checks.txt
+PASS: limited process query resolves the executable path
+PASS: invalid or inaccessible process metadata stays unavailable
+PASS: pause on desktop/overlay without counting background
+PASS: switch back resumes per-process total
+PASS: sleep or long timer gap is excluded
+PASS: locked session is excluded
+PASS: resume does not count locked interval
+PASS: PID reuse/new game launch gets a fresh total
+PASS: no reminder before 60 minutes
+PASS: reminder at exactly 60 active minutes
+PASS: acknowledge clears red reminder
+PASS: next reminder after another 60 active minutes
+PASS: reset clears active total and reminder
+PASS: duration does not wrap after 24 hours
+PASS: process age stays independent of foreground duration
+PASS: unreadable start time stays unavailable
+PASS: backward clock adjustment is clamped
+
+LAPORAN: startup-checks.txt
+Status: Tutup game; tunggu FPS siap, lalu buka lagi
+PASS: blocked or idle capture has no invented FPS
+PASS: FPS toggle and shutdown finish after startup failure
+
+LAPORAN: fps-ui.txt
+PASS: automatic custom Games installation checked in FPS menu
+PASS: FPS submenu survives live sensor and clock updates
+PASS: disable game without dismissing menu
+PASS: enable game without dismissing menu
+PASS: FPS off keeps menu open
+PASS: FPS on keeps menu open
+PASS: FPS toggles do not resize, move or recreate overlay
+PASS: FPS selections saved alongside existing preferences
+PASS: game preference restores through settings parser
+PASS: no hover tooltips added
+PASS: four themes rendered with simulated FPS and long-name cases
+
+LAPORAN: native-fps.txt
+PASS: native session prepared before launching a graphics process
+Session: MiniMonitor-Frames-20588-70ce05e43031417996c9893a05eebc9b
+Idle CPU seconds: 0.000
+ETW buffer bytes: 32768
+FPS 60.15
+FPS 60.15
+FPS 59.72
+FPS 60.40
+FPS 59.33
+FPS 59.46
+FPS 60.18
+FPS 60.18
+FPS 60.25
+PASS: Direct3D9 native FPS agrees with paced 60 FPS renderer
+Active CPU seconds over 10 seconds: 0.031
+PASS: idle disables providers; returning to game reuses the same session
+PASS: game exit expires frames and clears target
+PASS: native session and consumer close cleanly
+
+LAPORAN: ea-arm-status.txt
+PASS: installed and diagnostic FPS sessions prepared before launching EA FC
+
+LAPORAN: ea-native-game.txt
+READY: native FPS session prepared before game launch
+Session: MiniMonitor-Frames-19468-360828fd1df04d2a8659121d4c7e2a02
+Game: EA SPORTS FC 26 | PID 15348
+Executable: C:\Program Files (x86)\Steam\steamapps\common\FC 26\FC26.exe
+FPS 94.16
+FPS 92.90
+FPS 99.95
+FPS 100.08
+FPS 100.02
+FPS 100.01
+FPS 99.99
+FPS 99.97
+FPS 100.05
+FPS 99.98
+FPS 100.00
+FPS 100.02
+FPS 99.98
+FPS 99.95
+FPS 100.00
+PASS: real game frames captured using a pre-created native session
+PASS: resume reuses existing session while EA game is running
+ETW buffer bytes: 49152
+PASS: diagnostic session closed; game remains running
+
+LAPORAN: installed-checks.txt
+PASS: installed EXE and PresentMon match verified package
+PASS: installed Mini Monitor running, PID 22180
+PASS: startup task and enabled state preserved
+PASS: existing position, theme, sound and sensor preferences preserved
+PASS: CPU/GPU usage and temperatures available in installed 3.4.2 build
+Installed SHA256: 52DD955FCE07AAAFCAD7602F204849036AC6A91D54AFD01EF7A2866DD14D4834
+Startup enabled: True
+
+PASS: 30 berkas ZIP sama dengan runtime berdasarkan SHA256

@@ -1,0 +1,142 @@
+MINI MONITOR 3.5.0 - PENDINGINAN GPU
+23 fake-device backend checks and 70 UI checks passed.
+Real RTX 4060 Ti test: both fans AUTO target30 -> MANUAL target100 -> AUTO target30.
+Helper lifetime 8.119s including startup/shutdown. Native target requested for 8 seconds.
+Installer, sensor readings, theme/window/startup preferences verified.
+Helper only runs on demand; no additional idle helper process.
+References: https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceCommands.html
+https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceQueries.html
+PASS: normal burst completes
+PASS: exact eight-second monotonic target interval
+PASS: different manual and automatic policies restored independently
+PASS: one boost write per fan, one appropriate restoration, no leftover ownership
+PASS: every original fan is captured before first mutation
+PASS: journal intent precedes each native write
+PASS: existing FireStorm manual 100% remains manual 100%, never becomes Auto
+PASS: second-fan setter failure rolls back first fan without disturbing untouched fan
+PASS: setter that changes hardware then reports error is also rolled back
+PASS: one unsupported snapshot read prevents all fan writes
+PASS: unknown original fan policy fails before mutation
+PASS: external controller cancels burst, its new target is preserved, other fan restored
+PASS: user cancellation restores every still-owned fan
+PASS: parent already gone/cancel already set prevents initial writes
+PASS: failed manual restoration is explicit, retains recovery intent, and continues restoring other fans
+PASS: parent recovery can retry restoration after helper failure
+PASS: successful setter return without restored readback is not reported as success
+PASS: journal failure before native write leaves hardware untouched
+PASS: UUID mismatch forbids restoring a different GPU
+PASS: atomic journal replacement round-trips exact snapshot, status, and escaped message
+PASS: malformed or external-entity journal rejected
+PASS: oversize journal rejected
+PASS: stale recovery record is rejected before opening NVML
+All checks use fake hardware; no live GPU writes executed.
+PASS: cooling has a keyboard-accessible button role
+PASS: accessible name explains speed and duration
+PASS: cooling adds no hover tooltip
+PASS: DotBlack-wide: NVIDIA enables both entry points
+PASS: DotBlack-wide: complete button lies inside the client area
+PASS: DotBlack-wide: target remains usable when compact
+PASS: DotBlack-wide: cooling stays beside GPU on the right
+  client={Width=1080, Height=300}, cooling={X=1019,Y=104,Width=31,Height=31}
+PASS: DotBlack-narrow: NVIDIA enables both entry points
+PASS: DotBlack-narrow: complete button lies inside the client area
+PASS: DotBlack-narrow: target remains usable when compact
+PASS: DotBlack-narrow: cooling stays beside GPU on the right
+PASS: DotBlack-narrow: button stays above disk readings
+  client={Width=340, Height=320}, cooling={X=306,Y=234,Width=18,Height=18}
+PASS: DotBlack-overlay: NVIDIA enables both entry points
+PASS: DotBlack-overlay: complete button lies inside the client area
+PASS: DotBlack-overlay: target remains usable when compact
+PASS: DotBlack-overlay: cooling stays beside GPU on the right
+PASS: DotBlack-overlay: button stays above disk readings
+  client={Width=312, Height=423}, cooling={X=268,Y=309,Width=24,Height=24}
+PASS: DotWhite-wide: NVIDIA enables both entry points
+PASS: DotWhite-wide: complete button lies inside the client area
+PASS: DotWhite-wide: target remains usable when compact
+PASS: DotWhite-wide: cooling stays beside GPU on the right
+  client={Width=1080, Height=300}, cooling={X=1019,Y=104,Width=31,Height=31}
+PASS: DotWhite-narrow: NVIDIA enables both entry points
+PASS: DotWhite-narrow: complete button lies inside the client area
+PASS: DotWhite-narrow: target remains usable when compact
+PASS: DotWhite-narrow: cooling stays beside GPU on the right
+PASS: DotWhite-narrow: button stays above disk readings
+  client={Width=340, Height=320}, cooling={X=306,Y=234,Width=18,Height=18}
+PASS: DotWhite-overlay: NVIDIA enables both entry points
+PASS: DotWhite-overlay: complete button lies inside the client area
+PASS: DotWhite-overlay: target remains usable when compact
+PASS: DotWhite-overlay: cooling stays beside GPU on the right
+PASS: DotWhite-overlay: button stays above disk readings
+  client={Width=312, Height=423}, cooling={X=268,Y=309,Width=24,Height=24}
+PASS: KanjiArt-wide: NVIDIA enables both entry points
+PASS: KanjiArt-wide: complete button lies inside the client area
+PASS: KanjiArt-wide: target remains usable when compact
+PASS: KanjiArt-wide: cooling stays beside GPU on the right
+  client={Width=1080, Height=300}, cooling={X=1019,Y=104,Width=31,Height=31}
+PASS: KanjiArt-narrow: NVIDIA enables both entry points
+PASS: KanjiArt-narrow: complete button lies inside the client area
+PASS: KanjiArt-narrow: target remains usable when compact
+PASS: KanjiArt-narrow: cooling stays beside GPU on the right
+PASS: KanjiArt-narrow: button stays above disk readings
+  client={Width=340, Height=320}, cooling={X=306,Y=234,Width=18,Height=18}
+PASS: KanjiArt-overlay: NVIDIA enables both entry points
+PASS: KanjiArt-overlay: complete button lies inside the client area
+PASS: KanjiArt-overlay: target remains usable when compact
+PASS: KanjiArt-overlay: cooling stays beside GPU on the right
+PASS: KanjiArt-overlay: button stays above disk readings
+  client={Width=312, Height=423}, cooling={X=268,Y=309,Width=24,Height=24}
+PASS: GShock-wide: NVIDIA enables both entry points
+PASS: GShock-wide: complete button lies inside the client area
+PASS: GShock-wide: target remains usable when compact
+PASS: GShock-wide: cooling stays beside GPU on the right
+  client={Width=1080, Height=300}, cooling={X=1019,Y=102,Width=31,Height=31}
+PASS: GShock-narrow: NVIDIA enables both entry points
+PASS: GShock-narrow: complete button lies inside the client area
+PASS: GShock-narrow: target remains usable when compact
+PASS: GShock-narrow: cooling stays beside GPU on the right
+PASS: GShock-narrow: button stays above disk readings
+PASS: GShock-narrow: button does not cover GPU load bar
+  client={Width=340, Height=320}, cooling={X=306,Y=234,Width=18,Height=18}
+PASS: GShock-overlay: NVIDIA enables both entry points
+PASS: GShock-overlay: complete button lies inside the client area
+PASS: GShock-overlay: target remains usable when compact
+PASS: GShock-overlay: cooling stays beside GPU on the right
+PASS: GShock-overlay: button stays above disk readings
+PASS: GShock-overlay: button does not cover GPU load bar
+  client={Width=312, Height=423}, cooling={X=268,Y=309,Width=24,Height=24}
+PASS: unsupported GPU disables both cooling entry points
+PASS: missing GPU name remains disabled
+PASS: NVIDIA discovery enables cooling after startup
+PASS: active action becomes cancellation in both entry points
+PASS: countdown follows a simulated helper state without fan access
+PASS: idle state restores action and duration
+PASS: closing disables new cooling requests
+PASS: offscreen rendering never starts sensor polling or clock timers
+PASS: tests never launch a helper or change fan speeds
+BEFORE: Init 0
+Count 0 1
+GPU 0 fans result=0 count=2
+fan 0 policyResult=0 policy=0 targetResult=0 target=30
+fan 1 policyResult=0 policy=0 targetResult=0 target=30
+
+DURING: Init 0
+Count 0 1
+GPU 0 fans result=0 count=2
+fan 0 policyResult=0 policy=1 targetResult=0 target=100
+fan 1 policyResult=0 policy=1 targetResult=0 target=100
+
+Helper exit=0 elapsed=8.1188201
+AFTER: Init 0
+Count 0 1
+GPU 0 fans result=0 count=2
+fan 0 policyResult=0 policy=0 targetResult=0 target=30
+fan 1 policyResult=0 policy=0 targetResult=0 target=30
+
+<?xml version="1.0" encoding="utf-8"?><fanBoost version="1" status="Complete" startedUtc="2026-10-18T17:54:09.8931497Z" gpu="NVIDIA GeForce RTX 4060 Ti" uuid="GPU-f0707241-ef17-21c5-c8aa-8474f77a0a98"><message>Selesai 8 detik; pengaturan kipas dipulihkan.</message><fan index="0" policy="0" target="30" intent="0" /><fan index="1" policy="0" target="30" intent="0" /><log>snapshot fan=0 policy=0 target=30</log><log>snapshot fan=1 policy=0 target=30</log><log>applied fan=0 policy=1 target=100</log><log>applied fan=1 policy=1 target=100</log><log>restore fan=0 policy=0 target=30</log><log>restore fan=1 policy=0 target=30</log></fanBoost>
+PASS: both fans restored to the same policy and target as before
+PASS: installed EXE and PresentMon match verified package
+PASS: installed Mini Monitor running, PID 22636
+PASS: startup task and enabled state preserved
+PASS: theme, sound, window size and sensor preferences preserved; position may be saved on shutdown
+PASS: CPU/GPU usage and temperatures available in installed 3.5.0 build
+Installed SHA256: 137894112351A7AF4E9674E8C8DCAA0EDB4C563FB9840690A3B92F1CEBC508F3
+Startup enabled: True

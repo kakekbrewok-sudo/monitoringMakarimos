@@ -1,0 +1,29 @@
+PASS: silent startup
+PASS: one chime on exact clock-hour rollover
+PASS: no repeated clock chime in the same hour
+PASS: distinct cue for the active-hour event
+PASS: a backward clock edit cannot replay the already chimed hour
+PASS: simultaneous events select a short sequenced clip
+PASS: sleep/resume skips catch-up chimes
+PASS: manual clock jump is silent
+PASS: lock mutes both cues
+PASS: independent sound switches mute events
+PASS: unmute does not replay an earlier event
+PASS: active-hour sound is silent before 60 minutes
+PASS: milestone is preserved even when focus switches on the boundary
+PASS: refocusing an app does not repeat its hourly cue
+PASS: second active-hour cue fires independently of acknowledgement
+PASS: active cue is a single-tick event
+PASS: valid PCM WAV header: ClockHour
+PASS: noticeable bounded amplitude and click-free endpoints: ClockHour
+PASS: short reminder clip: ClockHour
+Audio ClockHour: 0.560s, peak 14.2% full-scale
+PASS: valid PCM WAV header: ActiveHour
+PASS: noticeable bounded amplitude and click-free endpoints: ActiveHour
+PASS: short reminder clip: ActiveHour
+Audio ActiveHour: 1.080s, peak 14.1% full-scale
+PASS: valid PCM WAV header: ClockHour, ActiveHour
+PASS: noticeable bounded amplitude and click-free endpoints: ClockHour, ActiveHour
+PASS: short reminder clip: ClockHour, ActiveHour
+Audio ClockHour, ActiveHour: 1.820s, peak 14.2% full-scale
+PASS: the two cue patterns differ

@@ -1,0 +1,19 @@
+PERBAIKAN FPS EA FC SUDAH DIRILIS - MINI MONITOR 3.4.2
+
+Selesai pada 13 Oktober 2026 (Asia/Jakarta).
+
+Pembacaan lokasi game memakai QueryFullProcessImageName dengan informasi
+proses terbatas. Sesi FPS DirectX disiapkan sebelum EA AntiCheat berjalan;
+provider frame dinonaktifkan ketika tidak memantau game. PresentMon tetap
+tersedia sebagai fallback. Tidak ada dependensi, service, atau driver baru.
+
+Uji langsung EA SPORTS FC 26 berhasil: 92.90-100.08 FPS dalam sampel uji.
+Berhenti dan melanjutkan pengambilan frame berhasil ketika game tetap berjalan.
+Game tidak ditutup setelah pengujian.
+
+Versi terpasang, runtime, dan ZIP telah diperbarui ke build yang sama.
+Tema, posisi, suara, interval sensor, pilihan FPS, dan startup dipertahankan.
+Hasil lengkap: HASIL-UJI-FPS-3.4.2.txt.
+
+Referensi keterbatasan sesi setelah EA AntiCheat aktif:
+https://github.com/GameTechDev/PresentMon/issues/573

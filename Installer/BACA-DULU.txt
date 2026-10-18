@@ -1,0 +1,32 @@
+MINI MONITOR 3.5.2 — INSTALLER OFFLINE
+
+Simpan MiniMonitor-Setup-3.5.2-x64.exe. Cukup file ini untuk memasang ulang;
+tidak perlu menyalin folder Source, ZIP portable, atau file lain.
+
+1. Klik dua kali installer, izinkan permintaan administrator Windows.
+2. Pilih startup Windows dan shortcut desktop.
+3. Bila driver CPU belum ada, biarkan pilihan PawnIO aktif.
+4. Klik Pasang / perbarui, lalu Buka Mini Monitor.
+
+Instalasi: C:\Program Files\MiniMonitor
+Pengaturan: %LOCALAPPDATA%\MiniMonitor\MiniMonitor.settings
+Hapus aplikasi: Settings > Apps > Installed apps > Mini Monitor > Uninstall.
+Tema dan pengaturan pribadi tetap disimpan untuk pemasangan berikutnya.
+PawnIO tidak ikut dihapus karena dapat digunakan aplikasi lain.
+
+Pembaruan mempertahankan preferensi; startup mengikuti mode tampilan terakhir.
+Tombol es tetap meminta fan GPU 100% selama 15 detik, lalu mengembalikan
+pengaturan sebelumnya. Dukungan sensor, FPS, dan fan bergantung perangkat.
+
+Persyaratan: Windows 10 versi 2004+ atau Windows 11 x64 (Intel/AMD),
+.NET Framework 4.7.2+, dan akun administrator milik pengguna aplikasi.
+Elevasi memakai kredensial akun lain dibatalkan agar startup/profil tidak tertukar.
+Installer tidak mengubah SmartScreen, antivirus, atau kebijakan keamanan Windows.
+EXE aplikasi dan installer belum ditandatangani sertifikat penerbit komersial;
+Windows dapat menampilkan Unknown publisher atau SmartScreen.
+
+File uninstaller yang sedang dipakai dijadwalkan dibersihkan saat restart.
+Pemasangan ulang sebelum restart tetap diperbolehkan.
+
+Komponen pihak ketiga dan sumber lisensi tercantum dalam THIRD-PARTY.txt
+serta folder licenses yang ikut dipasang. Paket tidak mengunduh komponen lain.
