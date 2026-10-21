@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -28,8 +29,8 @@ static class CoolingUiChecks
             // WinForms omits child controls of a never-shown parent. Render the
             // real button separately at its computed client position so QA can
             // inspect it without starting the form's Shown sensor callbacks.
-            var button = (CoolingButton)Get(form, "coolingButton");
-            using (var child = new Bitmap(button.Width, button.Height)) {
+            var buttons = new[] { (CoolingButton)Get(form, "coolingButton"), (CoolingButton)Get(form, "coolingShutdownButton") };
+            foreach (var button in buttons) using (var child = new Bitmap(button.Width, button.Height)) {
                 button.DrawToBitmap(child, new Rectangle(Point.Empty, child.Size));
                 Point origin = form.PointToScreen(Point.Empty);
                 using (Graphics graphics = Graphics.FromImage(image))
@@ -69,9 +70,26 @@ static class CoolingUiChecks
                 ((FpsRules)Get(form, "fpsRules")).Set(app, true);
                 Set(form, "fpsEnabled", true); Set(form, "fpsValue", (double?)118);
                 var button = (CoolingButton)Get(form, "coolingButton");
+                var shutdownButton = (CoolingButton)Get(form, "coolingShutdownButton");
                 var item = (ToolStripMenuItem)Get(form, "coolingItem");
+                var shutdownItem = (ToolStripMenuItem)Get(form, "coolingShutdownItem");
                 Check(button.AccessibleRole == AccessibleRole.PushButton && button.TabStop, "cooling has a keyboard-accessible button role");
                 Check(button.AccessibleName.Contains("100") && button.AccessibleName.Contains("15 detik"), "accessible name explains speed and duration");
+                Check(shutdownButton.AccessibleRole == AccessibleRole.PushButton && shutdownButton.TabStop,
+                    "cool-and-shutdown has a keyboard-accessible button role");
+                Check(shutdownButton.AccessibleName.Contains("15 detik") && shutdownButton.AccessibleName.Contains("matikan Windows"),
+                    "cool-and-shutdown accessible name explains duration and consequence");
+                ProcessStartInfo shutdown = MonitorWindow.CreateShutdownCommand();
+                Check(Path.GetFileName(shutdown.FileName).Equals("shutdown.exe", StringComparison.OrdinalIgnoreCase)
+                    && shutdown.Arguments.Contains("/s") && shutdown.Arguments.Contains("/t 0"),
+                    "shutdown command powers off Windows immediately only when explicitly invoked");
+                Check(MonitorWindow.ShouldShutdownAfterCooling(true, true, false, false),
+                    "successful requested cooling is eligible for shutdown");
+                Check(!MonitorWindow.ShouldShutdownAfterCooling(false, true, false, false)
+                    && !MonitorWindow.ShouldShutdownAfterCooling(true, false, false, false)
+                    && !MonitorWindow.ShouldShutdownAfterCooling(true, true, true, false)
+                    && !MonitorWindow.ShouldShutdownAfterCooling(true, true, false, true),
+                    "failure, cancellation, normal cooling, closing, and disposal suppress shutdown");
                 Check(!((ContextMenuStrip)Get(form, "menu")).ShowItemToolTips, "cooling adds no hover tooltip");
                 foreach (MonitorTheme theme in Enum.GetValues(typeof(MonitorTheme))) {
                     Call(form, "SetTheme", theme, false);
@@ -80,10 +98,19 @@ static class CoolingUiChecks
                         string name = theme + (overlay ? "-overlay" : layout == 0 ? "-wide" : "-narrow");
                         Layout(form, overlay, layout == 0 ? new Size(1080, 300) : new Size(340, 320));
                         Render(form, Path.Combine(output, name + ".png"));
-                        Check(button.Enabled && item.Enabled, name + ": NVIDIA enables both entry points");
+                        Check(button.Enabled && item.Enabled && shutdownButton.Enabled && shutdownItem.Enabled,
+                            name + ": NVIDIA enables cooling and cool-then-shutdown entry points");
                         Check(form.ClientRectangle.Contains(button.Bounds), name + ": complete button lies inside the client area");
+                        Check(form.ClientRectangle.Contains(shutdownButton.Bounds), name + ": shutdown button lies inside the client area");
+                        Check(!button.Bounds.IntersectsWith(shutdownButton.Bounds), name + ": cooling buttons never overlap");
+                        double separation = Math.Sqrt(Math.Pow(button.Left + button.Width / 2d - shutdownButton.Left - shutdownButton.Width / 2d, 2)
+                            + Math.Pow(button.Top + button.Height / 2d - shutdownButton.Top - shutdownButton.Height / 2d, 2));
+                        Check(separation >= Math.Min(button.Width, shutdownButton.Width) * 3,
+                            name + ": shutdown stays clearly separated from the ice button");
                         Check(button.Width >= 18 && button.Height >= 18, name + ": target remains usable when compact");
                         Check(button.Left > form.ClientSize.Width * .6, name + ": cooling stays beside GPU on the right");
+                        if (layout == 0) Check(shutdownButton.Right < form.ClientSize.Width * .35,
+                            name + ": wide layout keeps shutdown inside the main clock panel");
                         if (layout != 0) {
                             float scale = (float)Get(form, "scale");
                             Check(button.Bottom <= (int)Math.Round(343 * scale), name + ": button stays above disk readings");
@@ -94,14 +121,18 @@ static class CoolingUiChecks
                     }
                 }
                 sample.Gpu.Name = "AMD Radeon RX 6800"; Call(form, "UpdateCooling");
-                Check(!button.Enabled && !item.Enabled, "unsupported GPU disables both cooling entry points");
+                Check(!button.Enabled && !item.Enabled && !shutdownButton.Enabled && !shutdownItem.Enabled,
+                    "unsupported GPU disables all cooling entry points");
                 sample.Gpu.Name = null; Call(form, "UpdateCooling");
-                Check(!button.Enabled && !item.Enabled, "missing GPU name remains disabled");
+                Check(!button.Enabled && !item.Enabled && !shutdownButton.Enabled && !shutdownItem.Enabled,
+                    "missing GPU name remains disabled");
                 sample.Gpu.Name = "NVIDIA GeForce RTX 3060"; Call(form, "UpdateCooling");
-                Check(button.Enabled && item.Enabled, "NVIDIA discovery enables cooling after startup");
+                Check(button.Enabled && item.Enabled && shutdownButton.Enabled && shutdownItem.Enabled,
+                    "NVIDIA discovery enables both cooling actions after startup");
                 Set(form, "coolingStatePath", Path.Combine(output, "nonexistent-simulated-state.txt"));
                 Set(form, "coolingBusy", true); Call(form, "UpdateCooling");
-                Check(button.Running && button.AccessibleName.Contains("Batalkan") && item.Text.Contains("Batalkan"), "active action becomes cancellation in both entry points");
+                Check(button.Running && !shutdownButton.Running && button.AccessibleName.Contains("Batalkan") && item.Text.Contains("Batalkan"),
+                    "normal cooling exposes cancellation only on its active action");
                 string simulatedState = Path.Combine(output, "simulated-state.txt");
                 new FanBoostFileStore(simulatedState).Write(new FanBoostState { Status = "Running", StartedUtc = DateTime.UtcNow });
                 Set(form, "coolingStatePath", simulatedState); Call(form, "UpdateCooling");
@@ -112,13 +143,18 @@ static class CoolingUiChecks
                 }
                 Set(form, "coolingBusy", false); Call(form, "UpdateCooling");
                 Check(!button.Running && button.AccessibleName.Contains("15 detik"), "idle state restores action and duration");
+                Set(form, "coolingShutdownAfter", true); Set(form, "coolingBusy", true); Call(form, "UpdateCooling");
+                Check(shutdownButton.Running && !button.Running && shutdownButton.AccessibleName.Contains("Batalkan")
+                    && shutdownItem.Text.Contains("Batalkan"), "cool-and-shutdown exposes an explicit cancellable countdown");
+                Set(form, "coolingShutdownAfter", false); Set(form, "coolingBusy", false); Call(form, "UpdateCooling");
                 Set(form, "closing", true); Call(form, "UpdateCooling");
-                Check(!button.Enabled && !item.Enabled, "closing disables new cooling requests");
+                Check(!button.Enabled && !item.Enabled && !shutdownButton.Enabled && !shutdownItem.Enabled,
+                    "closing disables new cooling requests");
                 Set(form, "closing", false);
                 Check(Get(form, "reader") == null && !((Timer)Get(form, "timer")).Enabled && !((Timer)Get(form, "clockTimer")).Enabled,
                     "offscreen rendering never starts sensor polling or clock timers");
                 Check(Get(form, "coolingTask") == null && Get(form, "coolingCancel") == null,
-                    "tests never launch a helper or change fan speeds");
+                    "tests never launch a helper, change fan speeds, or request shutdown");
             }
             File.WriteAllText(Path.Combine(output, "cooling-ui-checks.txt"), Log.ToString()); return 0;
         } catch (Exception ex) {

@@ -1,8 +1,8 @@
-# Mini Monitor v3.5.2
+# Mini Monitor v3.5.3
 
-Installer offline satu file: `Installer/MiniMonitor-Setup-3.5.2-x64.exe`. Jalankan untuk memasang atau memperbarui Mini Monitor. Ada pilihan startup, shortcut desktop, dan driver CPU bila belum tersedia. Aplikasi terdaftar di Installed Apps Windows untuk uninstall; pengaturan pribadi dan driver bersama tetap disimpan.
+Installer offline satu file: `Installer/MiniMonitor-Setup-3.5.3-x64.exe`. Jalankan untuk memasang atau memperbarui Mini Monitor. Ada pilihan startup, shortcut desktop, dan driver CPU bila belum tersedia. Aplikasi terdaftar di Installed Apps Windows untuk uninstall; pengaturan pribadi dan driver bersama tetap disimpan.
 
-Versi 3.5.2 membenahi startup agar mengikuti mode jendela/overlay terakhir, mempertahankan pilihan startup saat memasang ulang, dan menunggu pemulihan kipas sebelum mengganti file. Fan boost tetap 100% selama 15 detik. Installer tidak menambah proses saat aplikasi berjalan.
+Versi 3.5.3 menambahkan tombol daya pada panel jam, terpisah dari tombol es di suhu GPU. Sekali klik langsung mendinginkan GPU selama 15 detik, memulihkan kontrol kipas, lalu mematikan Windows. Klik lagi selama hitung mundur untuk membatalkan; kegagalan atau intervensi pengendali lain juga membatalkan shutdown. Tombol es biasa tetap tersedia tanpa shutdown.
 
 Versi 3.5.1 terpasang dan terverifikasi. Tombol es di samping suhu GPU meminta target kipas 100% selama 15 detik lalu mengembalikan mode/target sebelumnya. Desain lebar Kanji, putih, dan hitam ikut terpasang. Hasil uji ada di Dokumentasi/HASIL-UJI-FAN-3.5.1.txt.
 
@@ -23,14 +23,15 @@ Versi 3.4.2 memperbaiki identifikasi EA FC dan menyiapkan sesi FPS sebelum game 
 | Lokasi | Isi |
 | --- | --- |
 | `Installer/` | Installer EXE offline, checksum, dan petunjuk pemasangan. |
-| `MiniMonitor/` | Dependensi dan input build installer, serta EXE portable rilis 3.5.1 sebelumnya. Gunakan installer untuk rilis 3.5.2. |
+| `MiniMonitor/` | Dependensi dan input build installer, serta EXE portable rilis 3.5.1 sebelumnya. Gunakan installer untuk rilis 3.5.3. |
 | `MiniMonitor.zip` | Arsip portable rilis 3.5.1 sebelumnya. Ekstrak seluruh isinya sebelum menjalankan. |
 | `Source/` | Kode sumber C#, ikon, manifest, skrip build, dan sumber pengujian. |
 | `Dokumentasi/` | Catatan hasil pengujian, perapihan, dan satu arsip riwayat pengembangan. |
 | `Pratinjau/` | Tampilan empat tema, tampilan sensor, logo, dan contoh bunyi singkat. |
 
-Untuk memasang atau memperbarui, jalankan `Installer/MiniMonitor-Setup-3.5.2-x64.exe`. Skrip `Pasang-Otomatis.cmd` dan `Perbarui-Aplikasi.cmd` tetap tersedia untuk paket ZIP lama. Panduan lengkap ada di `MiniMonitor/PANDUAN.txt`.
+Untuk memasang atau memperbarui, jalankan `Installer/MiniMonitor-Setup-3.5.3-x64.exe`. Skrip `Pasang-Otomatis.cmd` dan `Perbarui-Aplikasi.cmd` tetap tersedia untuk paket ZIP lama. Panduan lengkap ada di `MiniMonitor/PANDUAN.txt`.
 
 Aplikasi yang sudah terpasang berjalan dari `C:\Program Files\MiniMonitor`. Preferensi pengguna disimpan di `%LOCALAPPDATA%\MiniMonitor\MiniMonitor.settings`.
 
 Build lama, salinan paket, unduhan sementara, dan folder tes sementara sudah dibersihkan. Riwayat kode, skrip, laporan, dan gambar disimpan di `Dokumentasi/Arsip-Pengembangan.zip` (sekitar 1 MB) untuk pemulihan; arsip ini tidak diperlukan untuk menjalankan atau membangun aplikasi terbaru. Folder `work/` dapat dibuat lagi untuk pekerjaan pengembangan berikutnya.
+

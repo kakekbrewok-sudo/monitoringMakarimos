@@ -1,4 +1,4 @@
-// Mini Monitor 3.5.2: native Windows Forms / .NET Framework 4.7.2+.
+// Mini Monitor 3.5.3: native Windows Forms / .NET Framework 4.7.2+.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -159,7 +159,7 @@ sealed class SensorReader : IDisposable
     }
     public string Report(Snapshot s)
     {
-        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.2 | " + s.Timestamp.ToString("s"));
+        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.3 | " + s.Timestamp.ToString("s"));
         b.AppendLine("Administrator: " + Native.Admin + " | PawnIO installed: " + Native.DriverInstalled);
         b.AppendLine(String.Format(CultureInfo.InvariantCulture, "RAM: {0:0.00}/{1:0.00} GB ({2}%)", s.Used, s.Total, s.Load));
         foreach (Reading r in new[] { s.Cpu, s.Gpu }.Concat(s.Disks)) b.AppendLine(r.Kind + " | " + r.Name + " | " + r.Sensor + " | " + (r.Value.HasValue ? r.Value.Value.ToString("0.0", CultureInfo.InvariantCulture) + " C" : "unavailable") + " | Load " + (r.Load.HasValue ? r.Load.Value.ToString("0.0", CultureInfo.InvariantCulture) + "% (" + r.LoadSensor + ")" : "n/a") + " | " + r.Error);
@@ -227,7 +227,7 @@ sealed partial class MonitorWindow : Form
             chimes.Play(cue); UpdateCooling(); Invalidate();
         };
         SystemEvents.SessionSwitch += SessionChanged; SystemEvents.PowerModeChanged += PowerChanged;
-        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && !locked && !coolingButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
+        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && !locked && !coolingButton.Bounds.Contains(e.Location) && !coolingShutdownButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
         MouseDoubleClick += (s, e) => { if (overlay && e.Button == MouseButtons.Left && !locked) SetOverlay(false); };
         Resize += (s, e) => {
             if (overlay && WindowState == FormWindowState.Minimized) Hide();
@@ -468,7 +468,8 @@ sealed partial class MonitorWindow : Form
         else if (theme == MonitorTheme.KanjiArt) DrawText(g, now.ToString("HH:mm"), posterTime, ForeColor, new Rectangle(17, 58, 225, 68));
         else if (theme == MonitorTheme.DotWhite) DrawText(g, now.ToString("HH:mm"), clearClock, accent, new Rectangle(15, 54, 237, 78));
         else DotClock.Draw(g, now.ToString("HH:mm"), 20, 66, 7.6f, ForeColor, scale);
-        DrawText(g, now.ToString("ss") + " SEC", compact, accent, new Rectangle(20, 132, 220, 28));
+        PlaceShutdownButton(220, 132, 28);
+        DrawText(g, now.ToString("ss") + " SEC", compact, accent, new Rectangle(20, 132, 190, 28));
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, 173, 225, 26));
         AppSession current = activity.Selected;
         bool reminder = current != null && current.ReminderDue;
@@ -509,7 +510,8 @@ sealed partial class MonitorWindow : Form
         if (theme == MonitorTheme.DotWhite) DrawText(g, now.ToString("HH:mm"), clearClock, accent, new Rectangle(13, 30, 237, 75));
         else DotClock.Draw(g, now.ToString("HH:mm"), 19, 43, 7.6f, ForeColor, scale);
         DotClock.Draw(g, now.ToString("ss"), width - 55, 68, 3.1f, accent, scale);
-        DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(18, 99, width - 36, 20));
+        PlaceShutdownButton(width - 48, 94, 28);
+        DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(18, 99, width - 76, 20));
         Divider(g, 126, width);
         AppSession current = activity.Selected;
         bool reminder = current != null && current.ReminderDue;

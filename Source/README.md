@@ -1,6 +1,6 @@
 # Kode sumber Mini Monitor v3.5.1
 
-Versi 3.5.1 menambahkan tombol pendinginan GPU: target 100% selama 15 detik melalui NVML, dengan pemulihan mode/target sebelumnya. Pembaca terpisah hidup hanya selama tindakan ini.
+Versi 3.5.3 menambahkan tombol pendinginan lalu shutdown: target 100% selama 15 detik melalui NVML, pemulihan mode/target sebelumnya, kemudian shutdown hanya setelah hasil berhasil. Tombol es biasa tetap mendinginkan tanpa shutdown. Pembaca terpisah hidup hanya selama tindakan ini.
 
 Versi 3.4.7: desain lebar Kanji, putih, dan hitam diperbarui dengan tipografi lebih besar, indikator beban, serta pemisahan informasi yang lebih rapi. Tema Kanji memakai tipografi poster dan cap merah; putih mempertahankan jam merah utuh; hitam mempertahankan dot.
 

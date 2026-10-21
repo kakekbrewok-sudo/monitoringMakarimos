@@ -1,7 +1,7 @@
-MINI MONITOR (v3.5.2)
+MINI MONITOR (v3.5.3)
 
 INSTALLER OFFLINE
-Jalankan MiniMonitor-Setup-3.5.2-x64.exe untuk memasang atau memperbarui.
+Jalankan MiniMonitor-Setup-3.5.3-x64.exe untuk memasang atau memperbarui.
 Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
 Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
 hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
@@ -201,6 +201,12 @@ Klik ikon kepingan salju di samping suhu GPU untuk meminta kedua kipas GPU
 NVIDIA ke target 100% selama 15 detik. Hitung mundur tampil di tombol.
 Klik lagi untuk membatalkan. Tersedia juga lewat menu klik kanan.
 
+Ikon daya berada di panel jam utama, jauh dari tombol es. Sekali klik langsung
+menjalankan urutan yang sama, lalu mematikan Windows setelah kontrol kipas
+berhasil dipulihkan. Klik tombol lagi selama hitung mundur untuk membatalkan.
+Windows tidak dimatikan jika pendinginan gagal, dibatalkan, aplikasi ditutup,
+atau pengendali lain mengambil alih kipas.
+
 Sebelum mulai, mode AUTO/manual dan target masing-masing kipas disimpan.
 Setelah selesai, pengaturan itu dipulihkan dan dibaca ulang untuk verifikasi.
 Jika sebelumnya manual 100%, setelah 15 detik tetap manual 100%.
@@ -216,3 +222,4 @@ saat dibatalkan atau jendela ditutup. Saat tidak digunakan tidak ada proses
 pembaca kipas tambahan. Tidak mengubah voltage, power limit, atau overclock.
 Dukungan kontrol bergantung GPU/driver; kesalahan ditampilkan saat diklik.
 Lima belas detik bukan jaminan suhu tertentu; efeknya tergantung beban dan airflow.
+
