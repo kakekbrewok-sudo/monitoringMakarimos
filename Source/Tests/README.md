@@ -36,7 +36,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Tes gagal; baca laporan.' }
 
 `ActivityChecks` dan `FpsStartupChecks` menerima path berkas laporan. `RunningGameFpsChecks` menerima PID game dan path berkas laporan. `NativeGameFpsChecks` menerima nama proses dan path laporan. Tes lain menerima path folder keluaran, misalnya `& "$testOutput\ThemeChecks.exe" $testOutput`, setelah mengganti nama tes pada langkah kompilasi. `ThemeTrayPollingChecks` menerima argumen opsional kedua berupa nama berkas laporan.
 
-Tes yang membuka UI atau membaca sensor memerlukan sesi desktop Windows dan akses perangkat. Tes desktop terpisah tidak dapat berjalan bila sandbox melarang pembuatan desktop. `TrayChecks` dan `MonitorChecks` berinteraksi dengan desktop aktif; jalankan saat tidak sedang menggunakan aplikasi lain. Hasil pada `../../Dokumentasi/HASIL-UJI.txt` merupakan catatan pengujian sebelum perapihan folder, bukan hasil otomatis setiap build.
+Tes yang membuka UI atau membaca sensor memerlukan sesi desktop Windows dan akses perangkat. Tes desktop terpisah tidak dapat berjalan bila sandbox melarang pembuatan desktop. `TrayChecks` dan `MonitorChecks` berinteraksi dengan desktop aktif; jalankan saat tidak sedang menggunakan aplikasi lain.
 
 WindowChecks memeriksa ukuran normal, lebar 1080x300/680x300, portrait, overlay, maximize dan persistensi; juga merender empat tema. Tes tidak membuka game atau membunyikan pengingat.
 

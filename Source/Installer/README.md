@@ -4,7 +4,7 @@ Installer WinForms satu EXE, memakai compiler .NET Framework bawaan Windows. Tid
 
 Jalankan `Build-Installer.ps1` dari PowerShell. Skrip membangun aplikasi, memverifikasi tanda tangan dependensi resmi, membatasi isi payload ke daftar rilis eksplisit, lalu menghasilkan EXE di `outputs/Installer`. File `.build.json` memuat lokasi staging dan hash untuk audit pengembangan; bukan kebutuhan pengguna akhir.
 
-`SetupEngine.cs` menangani penutupan proses, ekstraksi yang tervalidasi, cadangan/rollback, startup, shortcut, registrasi Installed Apps, dan uninstall. `SetupProgram.cs` menangani pilihan UI, elevasi pengguna yang sama, pemeriksaan OS/runtime, dan driver opsional. Pengaturan di LocalAppData tidak disentuh oleh installer. Hasil rilis dicatat di `outputs/Dokumentasi/HASIL-UJI-INSTALLER-3.5.2.txt`.
+`SetupEngine.cs` menangani penutupan proses, ekstraksi yang tervalidasi, cadangan/rollback, startup, shortcut, registrasi Installed Apps, dan uninstall. `SetupProgram.cs` menangani pilihan UI, elevasi pengguna yang sama, pemeriksaan OS/runtime, dan driver opsional. Pengaturan di LocalAppData tidak disentuh oleh installer.
 
 Build `/define:SETUP_TEST` atau `Build-Installer.ps1 -TestBuild` memakai direktori, prefix task, shortcut, dan registry terpisah. `SetupChecks.cs` menguji lifecycle di lokasi uji tersebut dan tidak boleh dikompilasi tanpa `SETUP_TEST`. Jangan jalankan uji terhadap pemasangan produksi.
 

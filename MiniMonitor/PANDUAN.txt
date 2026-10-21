@@ -185,13 +185,10 @@ PENGATURAN DAN SUMBER
 Pengaturan posisi/tampilan: %LOCALAPPDATA%\MiniMonitor\MiniMonitor.settings.
 Startup: task MiniMonitor-<SID pengguna> pada Windows Task Scheduler.
 Jika dipasang melalui installer: hapus lewat Installed Apps Windows.
-Untuk paket ZIP lama: nonaktifkan startup, tutup aplikasi, lalu hapus foldernya.
 Driver PawnIO dapat dihapus terpisah melalui Installed Apps Windows.
 
-Kode sumber dipisahkan ke folder Source pada workspace pengembangan,
-sejajar dengan folder MiniMonitor. ZIP hanya berisi aplikasi siap pakai.
-Petunjuk build tersedia di Source\README.md; hasil pengujian sebelumnya
-disimpan di Dokumentasi\HASIL-UJI.txt pada workspace.
+Kode sumber berada di folder Source, sejajar dengan folder MiniMonitor.
+Petunjuk build dan pengujian tersedia di Source\README.md.
 Memerlukan Windows 64-bit dengan .NET Framework 4.7.2 atau lebih baru.
 Desain terinspirasi dot-matrix; bukan produk resmi Nothing.
 Lisensi dan sumber dependensi: THIRD-PARTY.txt dan folder licenses.
@@ -222,4 +219,3 @@ saat dibatalkan atau jendela ditutup. Saat tidak digunakan tidak ada proses
 pembaca kipas tambahan. Tidak mengubah voltage, power limit, atau overclock.
 Dukungan kontrol bergantung GPU/driver; kesalahan ditampilkan saat diklik.
 Lima belas detik bukan jaminan suhu tertentu; efeknya tergantung beban dan airflow.
-
