@@ -1,12 +1,12 @@
-# Mini Monitor 3.5.3
+# Mini Monitor 3.5.4
 
 Monitor Windows ringan untuk jam, durasi aplikasi aktif, RAM, CPU, GPU, suhu SSD/HDD, dan FPS game dalam satu tampilan. Mendukung mode overlay dan jendela yang dapat diubah ukurannya, empat tema, tray menu, startup Windows, serta pengingat satu jam.
 
-![Mini Monitor 3.5.3](Pratinjau/MiniMonitor-3.5.3.png)
+![Mini Monitor 3.5.4](Pratinjau/MiniMonitor-3.5.4.png)
 
 ## Instalasi
 
-Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.3-x64.exe`](Installer/MiniMonitor-Setup-3.5.3-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
+Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.4-x64.exe`](Installer/MiniMonitor-Setup-3.5.4-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
 
 Checksum SHA-256 tersedia di [`Installer/SHA256.txt`](Installer/SHA256.txt). Windows 10 versi 2004+ atau Windows 11 x64 dan .NET Framework 4.7.2+ diperlukan.
 
@@ -14,8 +14,9 @@ Checksum SHA-256 tersedia di [`Installer/SHA256.txt`](Installer/SHA256.txt). Win
 
 - Tombol es di samping suhu GPU menjalankan kipas NVIDIA 100% selama 15 detik lalu memulihkan pengaturan sebelumnya.
 - Tombol power pada panel jam langsung menjalankan pendinginan yang sama lalu mematikan Windows setelah pemulihan berhasil.
+- Tombol bulan pada panel jam menjalankan pendinginan yang sama lalu membuat Windows masuk Sleep.
 - Klik tombol aktif sekali lagi untuk membatalkan hitung mundur.
-- Kegagalan, penutupan aplikasi, atau pengendali lain seperti FireStorm yang mengambil alih akan membatalkan shutdown.
+- Kegagalan, penutupan aplikasi, atau pengendali lain seperti FireStorm yang mengambil alih akan membatalkan shutdown maupun Sleep.
 
 Kontrol kipas menggunakan NVML dan tidak mengubah voltage, power limit, atau overclock. Dukungan bergantung pada GPU dan driver.
 

@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Mini Monitor Setup")]
 [assembly: AssemblyDescription("Install or remove Mini Monitor")]
 [assembly: AssemblyProduct("Mini Monitor")]
-[assembly: AssemblyVersion("3.5.3.0")]
-[assembly: AssemblyFileVersion("3.5.3.0")]
-[assembly: AssemblyInformationalVersion("3.5.3")]
+[assembly: AssemblyVersion("3.5.4.0")]
+[assembly: AssemblyFileVersion("3.5.4.0")]
+[assembly: AssemblyInformationalVersion("3.5.4")]
 [assembly: ComVisible(false)]
-

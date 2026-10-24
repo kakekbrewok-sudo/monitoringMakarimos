@@ -36,6 +36,7 @@ sealed partial class MonitorWindow
             DrawText(g, now.ToString("ss"), monoTitle, accent, new Rectangle(20, 157, 38, 27));
             DrawText(g, "DETIK", small, muted, new Rectangle(60, 159, 80, 24));
         }
+        PlaceSleepButton(180, 165, 32);
         PlaceShutdownButton(218, 165, 32);
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, 211, 235, 23));
         using (var pen = new Pen(rule)) {

@@ -1,6 +1,6 @@
-MINI MONITOR 3.5.3 — INSTALLER OFFLINE
+MINI MONITOR 3.5.4 — INSTALLER OFFLINE
 
-Simpan MiniMonitor-Setup-3.5.3-x64.exe. Cukup file ini untuk memasang ulang;
+Simpan MiniMonitor-Setup-3.5.4-x64.exe. Cukup file ini untuk memasang ulang;
 tidak perlu menyalin folder Source, ZIP portable, atau file lain.
 
 1. Klik dua kali installer, izinkan permintaan administrator Windows.
@@ -18,6 +18,7 @@ Pembaruan mempertahankan preferensi; startup mengikuti mode tampilan terakhir.
 Tombol es tetap meminta fan GPU 100% selama 15 detik, lalu mengembalikan
 pengaturan sebelumnya. Tombol daya pada panel jam langsung melakukan pendinginan
 yang sama lalu mematikan Windows setelah pemulihan berhasil.
+Tombol bulan melakukan pendinginan yang sama lalu membuat Windows masuk Sleep.
 Dukungan sensor, FPS, dan fan bergantung perangkat.
 
 Persyaratan: Windows 10 versi 2004+ atau Windows 11 x64 (Intel/AMD),
@@ -32,4 +33,3 @@ Pemasangan ulang sebelum restart tetap diperbolehkan.
 
 Komponen pihak ketiga dan sumber lisensi tercantum dalam THIRD-PARTY.txt
 serta folder licenses yang ikut dipasang. Paket tidak mengunduh komponen lain.
-

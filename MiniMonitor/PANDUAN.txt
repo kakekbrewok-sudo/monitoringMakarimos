@@ -1,7 +1,7 @@
-MINI MONITOR (v3.5.3)
+MINI MONITOR (v3.5.4)
 
 INSTALLER OFFLINE
-Jalankan MiniMonitor-Setup-3.5.3-x64.exe untuk memasang atau memperbarui.
+Jalankan MiniMonitor-Setup-3.5.4-x64.exe untuk memasang atau memperbarui.
 Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
 Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
 hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
@@ -185,10 +185,13 @@ PENGATURAN DAN SUMBER
 Pengaturan posisi/tampilan: %LOCALAPPDATA%\MiniMonitor\MiniMonitor.settings.
 Startup: task MiniMonitor-<SID pengguna> pada Windows Task Scheduler.
 Jika dipasang melalui installer: hapus lewat Installed Apps Windows.
+Untuk paket ZIP lama: nonaktifkan startup, tutup aplikasi, lalu hapus foldernya.
 Driver PawnIO dapat dihapus terpisah melalui Installed Apps Windows.
 
-Kode sumber berada di folder Source, sejajar dengan folder MiniMonitor.
-Petunjuk build dan pengujian tersedia di Source\README.md.
+Kode sumber dipisahkan ke folder Source pada workspace pengembangan,
+sejajar dengan folder MiniMonitor. ZIP hanya berisi aplikasi siap pakai.
+Petunjuk build tersedia di Source\README.md; hasil pengujian sebelumnya
+disimpan di Dokumentasi\HASIL-UJI.txt pada workspace.
 Memerlukan Windows 64-bit dengan .NET Framework 4.7.2 atau lebih baru.
 Desain terinspirasi dot-matrix; bukan produk resmi Nothing.
 Lisensi dan sumber dependensi: THIRD-PARTY.txt dan folder licenses.
@@ -203,6 +206,11 @@ menjalankan urutan yang sama, lalu mematikan Windows setelah kontrol kipas
 berhasil dipulihkan. Klik tombol lagi selama hitung mundur untuk membatalkan.
 Windows tidak dimatikan jika pendinginan gagal, dibatalkan, aplikasi ditutup,
 atau pengendali lain mengambil alih kipas.
+
+Ikon bulan di sebelah ikon daya menjalankan pendinginan yang sama, memulihkan
+kontrol kipas, lalu memasukkan Windows ke mode Sleep. Tidak ada dialog konfirmasi.
+Klik ikon bulan lagi selama hitung mundur untuk membatalkan. Sleep tidak dijalankan
+jika pendinginan gagal, dibatalkan, atau pengendali lain mengambil alih kipas.
 
 Sebelum mulai, mode AUTO/manual dan target masing-masing kipas disimpan.
 Setelah selesai, pengaturan itu dipulihkan dan dibaca ulang untuk verifikasi.

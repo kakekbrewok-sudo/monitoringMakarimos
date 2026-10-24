@@ -13,6 +13,7 @@ sealed class CoolingButton : Button
     public Color Ink, Surface, ActiveSurface;
     public bool Running;
     public bool PowerSymbol;
+    public bool SleepSymbol;
     public int SecondsLeft;
     public CoolingButton()
     {
@@ -28,7 +29,14 @@ sealed class CoolingButton : Button
         Color ink = Enabled ? (Running ? Color.White : Ink) : SystemColors.GrayText;
         if (Running) TextRenderer.DrawText(g, SecondsLeft > 0 ? SecondsLeft.ToString() : "…", Font, ClientRectangle, ink,
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
-        else if (PowerSymbol) {
+        else if (SleepSymbol) {
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            float d = Math.Min(Width, Height) * .56f;
+            float x = (Width - d) / 2f, y = (Height - d) / 2f;
+            using (var moon = new SolidBrush(ink)) g.FillEllipse(moon, x, y, d, d);
+            using (var cutout = new SolidBrush(Running ? ActiveSurface : Surface))
+                g.FillEllipse(cutout, x + d * .34f, y - d * .12f, d, d);
+        } else if (PowerSymbol) {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             float cx = Width / 2f, cy = Height / 2f, radius = Math.Min(Width, Height) * .28f;
             using (var pen = new Pen(ink, Math.Max(1.4f, Width / 16f))) {
@@ -56,26 +64,33 @@ sealed class CoolingButton : Button
 
 sealed partial class MonitorWindow
 {
+    enum CoolingCompletionAction { None, Shutdown, Sleep }
     readonly CoolingButton coolingButton = new CoolingButton();
     readonly CoolingButton coolingShutdownButton = new CoolingButton { PowerSymbol = true };
-    ToolStripMenuItem coolingItem, coolingShutdownItem;
+    readonly CoolingButton coolingSleepButton = new CoolingButton { SleepSymbol = true };
+    ToolStripMenuItem coolingItem, coolingShutdownItem, coolingSleepItem;
     EventWaitHandle coolingCancel;
     Task coolingTask;
     bool coolingBusy;
-    bool coolingShutdownAfter;
+    CoolingCompletionAction coolingCompletionAction;
     string coolingStatePath;
     void InitializeCooling()
     {
         coolingButton.Click += async (s, e) => await ToggleCooling();
         coolingShutdownButton.Click += async (s, e) => await ToggleCoolingAndShutdown();
+        coolingSleepButton.Click += async (s, e) => await ToggleCoolingAndSleep();
         Controls.Add(coolingButton);
         Controls.Add(coolingShutdownButton);
+        Controls.Add(coolingSleepButton);
         coolingItem = new ToolStripMenuItem("❄ Dinginkan GPU · 100% / 15 detik");
         coolingItem.Click += async (s, e) => await ToggleCooling();
         menu.Items.Add(coolingItem);
         coolingShutdownItem = new ToolStripMenuItem("❄⏻ Dinginkan GPU lalu matikan PC");
         coolingShutdownItem.Click += async (s, e) => await ToggleCoolingAndShutdown();
         menu.Items.Add(coolingShutdownItem);
+        coolingSleepItem = new ToolStripMenuItem("❄☾ Dinginkan GPU lalu Sleep");
+        coolingSleepItem.Click += async (s, e) => await ToggleCoolingAndSleep();
+        menu.Items.Add(coolingSleepItem);
         UpdateCooling();
     }
     bool CoolingSupported { get { return data.Gpu.Name != null && data.Gpu.Name.IndexOf("NVIDIA", StringComparison.OrdinalIgnoreCase) >= 0; } }
@@ -95,13 +110,26 @@ sealed partial class MonitorWindow
         coolingShutdownButton.Ink = accent; coolingShutdownButton.ActiveSurface = accent;
         UpdateCooling();
     }
+    void PlaceSleepButton(int x, int y, int size)
+    {
+        Rectangle bounds = new Rectangle(S(x), S(y), Math.Max(18, S(size)), Math.Max(18, S(size)));
+        if (coolingSleepButton.Bounds != bounds) coolingSleepButton.Bounds = bounds;
+        coolingSleepButton.Surface = theme == MonitorTheme.GShock ? Color.FromArgb(189, 197, 166) : BackColor;
+        coolingSleepButton.Ink = accent; coolingSleepButton.ActiveSurface = accent;
+        UpdateCooling();
+    }
     void UpdateCooling()
     {
         if (coolingButton.IsDisposed) return;
-        coolingButton.Enabled = !closing && (coolingBusy ? !coolingShutdownAfter : CoolingSupported);
-        coolingShutdownButton.Enabled = !closing && (coolingBusy ? coolingShutdownAfter : CoolingSupported);
-        coolingButton.Running = coolingBusy && !coolingShutdownAfter;
-        coolingShutdownButton.Running = coolingBusy && coolingShutdownAfter;
+        bool normal = coolingCompletionAction == CoolingCompletionAction.None;
+        bool shutdown = coolingCompletionAction == CoolingCompletionAction.Shutdown;
+        bool sleep = coolingCompletionAction == CoolingCompletionAction.Sleep;
+        coolingButton.Enabled = !closing && (coolingBusy ? normal : CoolingSupported);
+        coolingShutdownButton.Enabled = !closing && (coolingBusy ? shutdown : CoolingSupported);
+        coolingSleepButton.Enabled = !closing && (coolingBusy ? sleep : CoolingSupported);
+        coolingButton.Running = coolingBusy && normal;
+        coolingShutdownButton.Running = coolingBusy && shutdown;
+        coolingSleepButton.Running = coolingBusy && sleep;
         int seconds = 0;
         if (coolingBusy) {
             FanBoostState state = GpuFanBoost.ReadState(coolingStatePath);
@@ -109,34 +137,51 @@ sealed partial class MonitorWindow
         }
         coolingButton.SecondsLeft = seconds;
         coolingShutdownButton.SecondsLeft = seconds;
+        coolingSleepButton.SecondsLeft = seconds;
         coolingButton.AccessibleName = coolingBusy ? "Batalkan pendinginan GPU" : "Dinginkan GPU: kipas 100 persen selama 15 detik";
         coolingShutdownButton.AccessibleName = coolingBusy
-            ? (coolingShutdownAfter ? "Batalkan pendinginan dan shutdown Windows" : "Pendinginan GPU sedang berjalan")
+            ? (shutdown ? "Batalkan pendinginan dan shutdown Windows" : "Pendinginan GPU sedang berjalan")
             : "Dinginkan GPU selama 15 detik lalu matikan Windows";
+        coolingSleepButton.AccessibleName = coolingBusy
+            ? (sleep ? "Batalkan pendinginan dan Sleep Windows" : "Pendinginan GPU sedang berjalan")
+            : "Dinginkan GPU selama 15 detik lalu Sleep Windows";
         if (coolingItem != null) {
             coolingItem.Enabled = coolingButton.Enabled;
             coolingItem.Text = coolingBusy ? "Batalkan pendinginan GPU" : "❄ Dinginkan GPU · 100% / 15 detik";
         }
         if (coolingShutdownItem != null) {
             coolingShutdownItem.Enabled = coolingShutdownButton.Enabled;
-            coolingShutdownItem.Text = coolingBusy && coolingShutdownAfter ? "Batalkan pendinginan dan shutdown"
+            coolingShutdownItem.Text = coolingBusy && shutdown ? "Batalkan pendinginan dan shutdown"
                 : coolingBusy ? "Pendinginan GPU sedang berjalan" : "❄⏻ Dinginkan GPU lalu matikan PC";
+        }
+        if (coolingSleepItem != null) {
+            coolingSleepItem.Enabled = coolingSleepButton.Enabled;
+            coolingSleepItem.Text = coolingBusy && sleep ? "Batalkan pendinginan dan Sleep"
+                : coolingBusy ? "Pendinginan GPU sedang berjalan" : "❄☾ Dinginkan GPU lalu Sleep";
         }
         coolingButton.Invalidate();
         coolingShutdownButton.Invalidate();
+        coolingSleepButton.Invalidate();
     }
     async Task ToggleCooling()
     {
         if (coolingBusy) { CancelCooling(); return; }
         if (closing || !CoolingSupported) return;
-        coolingShutdownAfter = false;
+        coolingCompletionAction = CoolingCompletionAction.None;
         await StartCooling();
     }
     async Task ToggleCoolingAndShutdown()
     {
-        if (coolingBusy) { if (coolingShutdownAfter) CancelCooling(); return; }
+        if (coolingBusy) { if (coolingCompletionAction == CoolingCompletionAction.Shutdown) CancelCooling(); return; }
         if (closing || !CoolingSupported) return;
-        coolingShutdownAfter = true;
+        coolingCompletionAction = CoolingCompletionAction.Shutdown;
+        await StartCooling();
+    }
+    async Task ToggleCoolingAndSleep()
+    {
+        if (coolingBusy) { if (coolingCompletionAction == CoolingCompletionAction.Sleep) CancelCooling(); return; }
+        if (closing || !CoolingSupported) return;
+        coolingCompletionAction = CoolingCompletionAction.Sleep;
         await StartCooling();
     }
     async Task StartCooling()
@@ -149,11 +194,11 @@ sealed partial class MonitorWindow
         coolingStatePath = Path.Combine(directory, "fan-boost-" + token + ".txt");
         coolingCancel = new EventWaitHandle(false, EventResetMode.ManualReset, eventName);
         UpdateCooling();
-        coolingTask = RunCooling(name, eventName, coolingStatePath, coolingShutdownAfter);
+        coolingTask = RunCooling(name, eventName, coolingStatePath, coolingCompletionAction);
         await coolingTask;
     }
     static string EncodeCoolingArgument(string value) { return Convert.ToBase64String(Encoding.UTF8.GetBytes(value)); }
-    async Task RunCooling(string gpuName, string eventName, string statePath, bool shutdownAfter)
+    async Task RunCooling(string gpuName, string eventName, string statePath, CoolingCompletionAction completionAction)
     {
         string failure = null;
         bool completed = false;
@@ -180,15 +225,18 @@ sealed partial class MonitorWindow
             try { if (File.Exists(statePath)) { File.Copy(statePath, Path.Combine(Path.GetDirectoryName(statePath), "fan-boost-last.txt"), true); File.Delete(statePath); } } catch { }
             if (coolingCancel != null) { coolingCancel.Dispose(); coolingCancel = null; }
             coolingBusy = false;
-            coolingShutdownAfter = false;
+            coolingCompletionAction = CoolingCompletionAction.None;
             if (!IsDisposed) { UpdateCooling(); Invalidate(); }
         }
         if (failure != null && !closing && !IsDisposed) MessageBox.Show(this, failure, "Pendinginan GPU", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        else if (ShouldShutdownAfterCooling(completed, shutdownAfter, closing, IsDisposed)) ShutdownWindowsAfterCooling();
+        else if (ShouldRunPowerAction(completed, completionAction != CoolingCompletionAction.None, closing, IsDisposed)) {
+            if (completionAction == CoolingCompletionAction.Shutdown) ShutdownWindowsAfterCooling();
+            else if (completionAction == CoolingCompletionAction.Sleep) SleepWindowsAfterCooling();
+        }
     }
-    internal static bool ShouldShutdownAfterCooling(bool completed, bool shutdownRequested, bool windowClosing, bool disposed)
+    internal static bool ShouldRunPowerAction(bool completed, bool actionRequested, bool windowClosing, bool disposed)
     {
-        return completed && shutdownRequested && !windowClosing && !disposed;
+        return completed && actionRequested && !windowClosing && !disposed;
     }
     internal static ProcessStartInfo CreateShutdownCommand()
     {
@@ -200,6 +248,15 @@ sealed partial class MonitorWindow
     {
         try { SaveSettings(); Process.Start(CreateShutdownCommand()); }
         catch (Exception ex) { if (!closing && !IsDisposed) MessageBox.Show(this, "Windows belum dapat dimatikan: " + ex.Message, Text); }
+    }
+    void SleepWindowsAfterCooling()
+    {
+        try {
+            SaveSettings();
+            if (!Application.SetSuspendState(PowerState.Suspend, true, false))
+                throw new InvalidOperationException("Windows menolak permintaan Sleep.");
+        }
+        catch (Exception ex) { if (!closing && !IsDisposed) MessageBox.Show(this, "Windows belum dapat masuk Sleep: " + ex.Message, Text); }
     }
     void CancelCooling() { try { if (coolingCancel != null) coolingCancel.Set(); } catch (ObjectDisposedException) { } }
 }

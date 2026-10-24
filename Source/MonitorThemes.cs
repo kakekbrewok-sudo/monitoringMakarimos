@@ -76,6 +76,7 @@ sealed partial class MonitorWindow
         }
         using (var red = new SolidBrush(accent)) g.FillRectangle(red, S(width - 28), S(58), S(10), S(10));
         DrawText(g, now.ToString("HH:mm"), posterTime, ForeColor, new Rectangle(101, 62, width - 126, 47));
+        PlaceSleepButton(width - 82, 72, 28);
         PlaceShutdownButton(width - 48, 72, 28);
         DrawText(g, now.ToString("ss") + " SEC", mono, accent, new Rectangle(102, 105, width - 128, 19), true);
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), mono, muted, new Rectangle(18, 126, width - 36, 19));
@@ -116,6 +117,7 @@ sealed partial class MonitorWindow
         DrawText(g, "24H", mono, ForeColor, new Rectangle(22, 44, 39, 20));
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(65, 44, width - 87, 20), true);
         SegmentClock.Draw(g, now.ToString("HH:mm"), 23, 70, 59, ForeColor, track, scale);
+        PlaceSleepButton(width - 82, 68, 28);
         PlaceShutdownButton(width - 48, 68, 28);
         SegmentClock.Draw(g, now.ToString("ss"), width - 59, 100, 28, ForeColor, track, scale);
         Divider(g, 138, width);
