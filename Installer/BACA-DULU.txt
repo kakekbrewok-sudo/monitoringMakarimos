@@ -1,6 +1,6 @@
-MINI MONITOR 3.5.4 — INSTALLER OFFLINE
+MINI MONITOR 3.5.5 — INSTALLER OFFLINE
 
-Simpan MiniMonitor-Setup-3.5.4-x64.exe. Cukup file ini untuk memasang ulang;
+Simpan MiniMonitor-Setup-3.5.5-x64.exe. Cukup file ini untuk memasang ulang;
 tidak perlu menyalin folder Source, ZIP portable, atau file lain.
 
 1. Klik dua kali installer, izinkan permintaan administrator Windows.

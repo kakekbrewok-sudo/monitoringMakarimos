@@ -62,7 +62,7 @@ sealed partial class MonitorWindow
             WideFill(g, track, 287, 204, 259, poster ? 2 : 4);
             WideFill(g, accent, 287, 204, (float)(259 * progress), poster ? 2 : 4);
         }
-        DrawText(g, reminder ? "WAKTUNYA ISTIRAHAT" : "PENGINGAT WAKTU AKTIF", small, reminder || paper || poster ? accent : muted, new Rectangle(287, 214, 259, 23));
+        PaintReminderAction(g, new Rectangle(287, 214, 259, 23));
 
         int col = (width - 606) / 3;
         string[] names = { "RAM", "CPU", "GPU" };

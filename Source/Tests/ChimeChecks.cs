@@ -37,15 +37,20 @@ static class ChimeChecks
             for (int i = 0; i < 3600; i++) tracker.Advance(a, 1, false);
             Check(tracker.ActiveHourReached, "second active-hour cue fires independently of acknowledgement");
             tracker.Advance(a, 1, false); Check(!tracker.ActiveHourReached, "active cue is a single-tick event");
+            tracker.Selected.ActiveSeconds = 5211; tracker.Selected.Acknowledge();
+            tracker.Selected.ActiveSeconds = 7199; tracker.Advance(a, 1, false);
+            Check(!tracker.ActiveHourReached, "acknowledgement shifts chime away from absolute hour boundary");
+            tracker.Selected.ActiveSeconds = 8810; tracker.Advance(a, 1, false);
+            Check(tracker.ActiveHourReached, "chime follows the full hour after late acknowledgement");
             foreach (ChimeCue cue in new[] { ChimeCue.ClockHour, ChimeCue.ActiveHour, ChimeCue.ClockHour | ChimeCue.ActiveHour })
             {
                 byte[] wav = SoftChimes.CreateWave(cue);
                 Check(Encoding.ASCII.GetString(wav, 0, 4) == "RIFF" && BitConverter.ToInt32(wav, 4) == wav.Length - 8 && BitConverter.ToInt32(wav, 40) == wav.Length - 44, "valid PCM WAV header: " + cue);
                 short[] samples = new short[(wav.Length - 44) / 2]; Buffer.BlockCopy(wav, 44, samples, 0, wav.Length - 44);
                 double peak = samples.Max(v => Math.Abs((int)v)) / 32767.0;
-                Check(peak > .10 && peak <= .18 && Math.Abs(samples[0]) <= 1 && Math.Abs(samples[samples.Length - 1]) <= 1, "noticeable bounded amplitude and click-free endpoints: " + cue);
+                Check(peak > .10 && peak <= .32 && Math.Abs(samples[0]) <= 1 && Math.Abs(samples[samples.Length - 1]) <= 1, "noticeable bounded amplitude and click-free endpoints: " + cue);
                 double seconds = (double)samples.Length / SoftChimes.SampleRate;
-                Check(seconds <= 2.0 && Math.Abs(seconds - SoftChimes.Seconds(cue)) < .001, "short reminder clip: " + cue);
+                Check(seconds <= 3.2 && Math.Abs(seconds - SoftChimes.Seconds(cue)) < .001, "short reminder clip: " + cue);
                 log.AppendLine(String.Format(System.Globalization.CultureInfo.InvariantCulture, "Audio {0}: {1:0.000}s, peak {2:0.0}% full-scale", cue, seconds, peak * 100));
                 if (cue != (ChimeCue.ClockHour | ChimeCue.ActiveHour)) File.WriteAllBytes(Path.Combine(args[0], cue == ChimeCue.ClockHour ? "jam-baru.wav" : "satu-jam-aktif.wav"), wav);
             }

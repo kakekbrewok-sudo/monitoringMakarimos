@@ -18,7 +18,7 @@ using Microsoft.Win32;
 // User settings and the separately installed PawnIO driver are never removed.
 internal static class SetupEngine
 {
-    public const string ProductVersion = "3.5.4";
+    public const string ProductVersion = "3.5.5";
 #if SETUP_TEST
     public const string InstallDirectoryName = "MiniMonitor-SetupTest";
     public const string TaskPrefix = "MiniMonitor-SetupTest-";

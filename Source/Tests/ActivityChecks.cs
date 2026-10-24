@@ -33,6 +33,13 @@ static class ActivityChecks
             for (int i = 0; i < 3600; i++) t.Advance(reboot, 1, false);
             Check(t.Selected.ReminderDue, "next reminder after another 60 active minutes");
             t.ResetSelected(); Check(t.Selected.ActiveSeconds == 0 && !t.Selected.ReminderDue, "reset clears active total and reminder");
+            var late = new AppSession { ActiveSeconds = 5211 };
+            late.Acknowledge();
+            Check(late.ActiveSeconds == 5211 && late.ReminderProgress == 0 && !late.ReminderDue, "late acknowledgement preserves total and empties reminder bar");
+            late.ActiveSeconds += 3599;
+            Check(!late.ReminderDue, "late acknowledgement grants a full 60 active minutes");
+            late.ActiveSeconds++;
+            Check(late.ReminderDue && late.ReminderProgress == 1, "next reminder at exactly 02:26:51 after acknowledgement at 01:26:51");
             Check(ActivityTracker.Duration(90061) == "25:01:01", "duration does not wrap after 24 hours");
             Check(ActivityTracker.OpenDuration(a, a.OpenedUtc.Value.AddMinutes(90)) == 5400, "process age stays independent of foreground duration");
             Check(ActivityTracker.OpenDuration(b, DateTime.UtcNow) == -1, "unreadable start time stays unavailable");

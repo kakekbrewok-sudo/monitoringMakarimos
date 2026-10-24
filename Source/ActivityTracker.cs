@@ -17,10 +17,11 @@ sealed class AppSession
 {
     public AppIdentity App;
     public double ActiveSeconds;
-    public int AcknowledgedHours;
-    public bool ReminderDue { get { return ActiveSeconds >= (AcknowledgedHours + 1) * 3600.0; } }
-    public double ReminderProgress { get { return Math.Max(0, Math.Min(1, (ActiveSeconds - AcknowledgedHours * 3600.0) / 3600.0)); } }
-    public void Acknowledge() { AcknowledgedHours = (int)(ActiveSeconds / 3600.0); }
+    public double ReminderBaselineSeconds;
+    public double ReminderElapsed { get { return Math.Max(0, ActiveSeconds - ReminderBaselineSeconds); } }
+    public bool ReminderDue { get { return ReminderElapsed >= 3600.0; } }
+    public double ReminderProgress { get { return Math.Max(0, Math.Min(1, ReminderElapsed / 3600.0)); } }
+    public void Acknowledge() { ReminderBaselineSeconds = ActiveSeconds; }
 }
 
 // Foreground duration is sampled once per second and is never inferred from
@@ -62,9 +63,9 @@ sealed class ActivityTracker
         AppSession previous;
         if (!paused && app != null && elapsed >= 0 && elapsed <= 5 && previousKey != null && sessions.TryGetValue(previousKey, out previous))
         {
-            long oldHour = (long)(previous.ActiveSeconds / 3600);
+            long oldHour = (long)(previous.ReminderElapsed / 3600);
             previous.ActiveSeconds += elapsed;
-            ActiveHourReached = (long)(previous.ActiveSeconds / 3600) > oldHour;
+            ActiveHourReached = (long)(previous.ReminderElapsed / 3600) > oldHour;
         }
         if (paused || app == null) { IsActive = false; previousKey = null; return; }
         AppSession current;
@@ -75,7 +76,7 @@ sealed class ActivityTracker
         }
         Selected = current; previousKey = app.Key; IsActive = true;
     }
-    public void ResetSelected() { if (Selected != null) { Selected.ActiveSeconds = 0; Selected.AcknowledgedHours = 0; } }
+    public void ResetSelected() { if (Selected != null) { Selected.ActiveSeconds = 0; Selected.ReminderBaselineSeconds = 0; } }
     internal static string ExecutablePath(int pid)
     {
         // MainModule requires access that some games disallow. Ask only for

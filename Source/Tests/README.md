@@ -19,7 +19,7 @@ Sumber tes disimpan terpisah dari paket aplikasi. Masing-masing memiliki entry p
 | `RunningGameFpsChecks` | Membaca FPS selama 15 detik dari PID game yang sudah berjalan, tanpa mengaktifkan atau menutup game; perlu administrator dan folder `fps` di sebelah EXE tes. Argumen: PID lalu path berkas laporan. |
 | `FpsUiChecks` | Menu FPS saat timer berjalan, persistensi dan render empat tema; kompilasikan juga `ThemeTrayPollingChecks.cs` untuk memakai DesktopTestRunner. |
 
-Contoh dari folder `outputs/Source`, untuk mengompilasi tes durasi:
+Contoh dari folder `Source`, untuk mengompilasi tes durasi:
 
 ```powershell
 $testName = 'ActivityChecks'
@@ -41,3 +41,5 @@ Tes yang membuka UI atau membaca sensor memerlukan sesi desktop Windows dan akse
 WindowChecks memeriksa ukuran normal, lebar 1080x300/680x300, portrait, overlay, maximize dan persistensi; juga merender empat tema. Tes tidak membuka game atau membunyikan pengingat.
 
 FanBoostChecks memakai perangkat palsu: 15 detik, AUTO/manual, pembatalan, konflik controller, rollback parsial, dan journal. Tidak mengubah kipas asli. CoolingUiChecks merender tombol di seluruh tema/ukuran dan menguji aksesibilitas/countdown tanpa klik hardware.
+
+ReminderUiChecks memeriksa klik tombol/bar konfirmasi, total waktu yang dipertahankan, reset pengingat, kunci klik, dan render empat tema pada tiga layout. Tidak memutar suara atau menjalankan tindakan daya.

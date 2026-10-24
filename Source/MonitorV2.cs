@@ -1,4 +1,4 @@
-// Mini Monitor 3.5.4: native Windows Forms / .NET Framework 4.7.2+.
+// Mini Monitor 3.5.5: native Windows Forms / .NET Framework 4.7.2+.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -159,7 +159,7 @@ sealed class SensorReader : IDisposable
     }
     public string Report(Snapshot s)
     {
-        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.4 | " + s.Timestamp.ToString("s"));
+        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.5 | " + s.Timestamp.ToString("s"));
         b.AppendLine("Administrator: " + Native.Admin + " | PawnIO installed: " + Native.DriverInstalled);
         b.AppendLine(String.Format(CultureInfo.InvariantCulture, "RAM: {0:0.00}/{1:0.00} GB ({2}%)", s.Used, s.Total, s.Load));
         foreach (Reading r in new[] { s.Cpu, s.Gpu }.Concat(s.Disks)) b.AppendLine(r.Kind + " | " + r.Name + " | " + r.Sensor + " | " + (r.Value.HasValue ? r.Value.Value.ToString("0.0", CultureInfo.InvariantCulture) + " C" : "unavailable") + " | Load " + (r.Load.HasValue ? r.Load.Value.ToString("0.0", CultureInfo.InvariantCulture) + "% (" + r.LoadSensor + ")" : "n/a") + " | " + r.Error);
@@ -227,7 +227,7 @@ sealed partial class MonitorWindow : Form
             chimes.Play(cue); UpdateCooling(); Invalidate();
         };
         SystemEvents.SessionSwitch += SessionChanged; SystemEvents.PowerModeChanged += PowerChanged;
-        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && !locked && !coolingButton.Bounds.Contains(e.Location) && !coolingShutdownButton.Bounds.Contains(e.Location) && !coolingSleepButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
+        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && TryAcknowledgeReminder(e.Location)) return; if (e.Button == MouseButtons.Left && !locked && !coolingButton.Bounds.Contains(e.Location) && !coolingShutdownButton.Bounds.Contains(e.Location) && !coolingSleepButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
         MouseDoubleClick += (s, e) => { if (overlay && e.Button == MouseButtons.Left && !locked) SetOverlay(false); };
         Resize += (s, e) => {
             if (overlay && WindowState == FormWindowState.Minimized) Hide();
@@ -273,11 +273,11 @@ sealed partial class MonitorWindow : Form
         }
         menu.Items.Add(themeMenu); BuildFpsMenu();
         menu.Items.Add(new ToolStripSeparator());
-        acknowledgeItem = Setting("Sudah istirahat · ingatkan 60 menit berikutnya", (s, e) => { if (activity.Selected != null) activity.Selected.Acknowledge(); Invalidate(); }); menu.Items.Add(acknowledgeItem);
+        acknowledgeItem = Setting("Sudah istirahat · ingatkan 60 menit berikutnya", (s, e) => { AcknowledgeReminder(); }); menu.Items.Add(acknowledgeItem);
         menu.Items.Add(Setting("Reset waktu aktif aplikasi ini", (s, e) => { activity.ResetSelected(); Invalidate(); }));
         var soundMenu = new ToolStripMenuItem("Suara pengingat");
         clockSoundItem = Setting("Pergantian jam · 2 nada", (s, e) => { clockSound = !clockSound; SaveSettings(); });
-        appSoundItem = Setting("Tiap 1 jam aktif · 4 nada", (s, e) => { appSound = !appSound; SaveSettings(); });
+        appSoundItem = Setting("Tiap 1 jam aktif · 8 nada", (s, e) => { appSound = !appSound; SaveSettings(); });
         soundMenu.DropDownItems.Add(clockSoundItem); soundMenu.DropDownItems.Add(appSoundItem);
         soundMenu.DropDownItems.Add(new ToolStripSeparator());
         soundMenu.DropDownItems.Add(Setting("Coba bunyi pergantian jam", (s, e) => chimes.Play(ChimeCue.ClockHour)));
@@ -439,7 +439,7 @@ sealed partial class MonitorWindow : Form
     }
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaint(e); Graphics g = e.Graphics;
+        base.OnPaint(e); reminderActionBounds = Rectangle.Empty; Graphics g = e.Graphics;
         if (!overlay && ClientSize.Width >= 680 * dpiScale && ClientSize.Width >= ClientSize.Height * 2) { PaintWide(g); return; }
         scale = overlay ? dpiScale : Math.Max(.5f, Math.Min(ClientSize.Width / 420f, ClientSize.Height / (float)ContentHeight));
         using (var pen = new Pen(frame)) g.DrawRectangle(pen, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
@@ -484,7 +484,7 @@ sealed partial class MonitorWindow : Form
         if (fpsEnabled && current != null && fpsRules.Tracks(current.App)) DrawText(g, (fpsValue.HasValue ? Math.Round(fpsValue.Value).ToString("0") : "—") + " FPS", compact, accent, new Rectangle(280, 166, 260, 27));
         using (var background = new SolidBrush(track)) g.FillRectangle(background, S(280), S(203), S(260), S(3));
         if (current != null) using (var fill = new SolidBrush(accent)) g.FillRectangle(fill, S(280), S(203), S((int)(260 * current.ReminderProgress)), S(3));
-        DrawText(g, reminder ? "WAKTUNYA ISTIRAHAT" : "PENGINGAT / 60 MENIT AKTIF", small, reminder || theme == MonitorTheme.DotWhite ? accent : muted, new Rectangle(280, 210, 260, 24));
+        PaintReminderAction(g, new Rectangle(280, 210, 260, 24));
         int col = (width - 600) / 3;
         string[] labels = { "RAM", "CPU", "GPU" };
         string[] loads = { data.MemoryValid ? data.Load + "%" : "—", data.Cpu.Load.HasValue ? data.Cpu.Load.Value.ToString("0") + "%" : "—", data.Gpu.Load.HasValue ? data.Gpu.Load.Value.ToString("0") + "%" : "—" };
@@ -533,7 +533,7 @@ sealed partial class MonitorWindow : Form
             float step = (width - 36f) / 30;
             for (int i = 0; i < 30; i++) g.FillRectangle(i < progress * 30 ? ink : faint, (18 + i * step) * scale, S(247), Math.Max(1, (step - 3) * scale), S(3));
         }
-        DrawText(g, reminder ? "60 MENIT+ / WAKTUNYA ISTIRAHAT" : "PENGINGAT ISTIRAHAT / 60 MENIT", small, reminder || theme == MonitorTheme.DotWhite ? accent : muted, new Rectangle(18, 254, width - 36, 20));
+        PaintReminderAction(g, new Rectangle(18, 254, width - 36, 24));
         Divider(g, 282, width);
         int ramWidth = 48, col = (width - 36 - ramWidth - 20) / 2;
         Metric(g, "RAM", data.MemoryValid ? data.Load + "%" : "—", 18, ramWidth, false);
@@ -554,6 +554,31 @@ sealed partial class MonitorWindow : Form
         // Only show actionable errors; normal operation has no hover text.
         if (lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null)
             DrawText(g, StatusText(), small, muted, new Rectangle(18, (int)(ClientSize.Height / scale) - (theme == MonitorTheme.GShock ? 27 : 20), width - 36, 18));
+    }
+    Rectangle reminderActionBounds;
+    void AcknowledgeReminder()
+    {
+        if (activity.Selected == null || !activity.Selected.ReminderDue) return;
+        activity.Selected.Acknowledge();
+        reminderActionBounds = Rectangle.Empty;
+        Invalidate();
+    }
+    bool TryAcknowledgeReminder(Point point)
+    {
+        if (locked || !reminderActionBounds.Contains(point) || activity.Selected == null || !activity.Selected.ReminderDue) return false;
+        AcknowledgeReminder();
+        return true;
+    }
+    void PaintReminderAction(Graphics g, Rectangle logical, int barY = -1)
+    {
+        bool due = activity.Selected != null && activity.Selected.ReminderDue;
+        Rectangle bounds = new Rectangle(S(logical.X), S(logical.Y), S(logical.Width), S(logical.Height));
+        if (due) {
+            reminderActionBounds = new Rectangle(bounds.Left, bounds.Top - S(12), bounds.Width, bounds.Height + S(12));
+            if (barY >= 0) reminderActionBounds = Rectangle.Union(reminderActionBounds, new Rectangle(bounds.Left, S(barY), bounds.Width, Math.Max(2, S(3))));
+            using (var outline = new Pen(accent)) g.DrawRectangle(outline, bounds.X, bounds.Y, Math.Max(1, bounds.Width - 1), Math.Max(1, bounds.Height - 1));
+            DrawText(g, "✓ SUDAH ISTIRAHAT", small, accent, new Rectangle(logical.X + 6, logical.Y, logical.Width - 12, logical.Height));
+        } else DrawText(g, "PENGINGAT BERIKUTNYA / 60 MENIT AKTIF", small, muted, logical);
     }
     void Divider(Graphics g, int y, int width) { using (var p = new Pen(rule)) g.DrawLine(p, S(18), S(y), S(width - 18), S(y)); }
     void Metric(Graphics g, string label, string reading, int x, int width, bool usage)

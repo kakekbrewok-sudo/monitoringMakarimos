@@ -60,9 +60,9 @@ sealed class SoftChimes : IDisposable
         if (t <= 0 || t >= length) return 0;
         double attack = Math.Min(1, t / .012), release = Math.Min(1, (length - t) / .025);
         double envelope = attack * attack * release * release * Math.Exp(-3 * t / length);
-        return .18 * envelope * (Math.Sin(2 * Math.PI * frequency * t) + .12 * Math.Sin(2 * Math.PI * frequency * 2 * t)) / 1.12;
+        return .32 * envelope * (Math.Sin(2 * Math.PI * frequency * t) + .12 * Math.Sin(2 * Math.PI * frequency * 2 * t)) / 1.12;
     }
-    public static double Seconds(ChimeCue cue) { return cue == ChimeCue.ClockHour ? .56 : cue == ChimeCue.ActiveHour ? 1.08 : 1.82; }
+    public static double Seconds(ChimeCue cue) { return cue == ChimeCue.ClockHour ? .56 : cue == ChimeCue.ActiveHour ? 2.40 : 3.14; }
     public static byte[] CreateWave(ChimeCue cue)
     {
         int count = (int)Math.Round(Seconds(cue) * SampleRate);
@@ -75,11 +75,12 @@ sealed class SoftChimes : IDisposable
             for (int i = 0; i < count; i++)
             {
                 double t = (double)i / SampleRate, sound = 0;
-                if ((cue & ChimeCue.ClockHour) != 0) sound += Bell(t, .22, 880) + Bell(t - .30, .26, 1046.5);
+                if ((cue & ChimeCue.ClockHour) != 0) sound += .56 * (Bell(t, .22, 880) + Bell(t - .30, .26, 1046.5));
                 if ((cue & ChimeCue.ActiveHour) != 0)
                 {
                     double a = t - (cue == (ChimeCue.ClockHour | ChimeCue.ActiveHour) ? .74 : 0);
-                    sound += Bell(a, .20, 784) + Bell(a - .28, .20, 784) + Bell(a - .56, .20, 784) + Bell(a - .84, .24, 1046.5);
+                    for (int beat = 0; beat < 8; beat++)
+                        sound += Bell(a - beat * .30, .30, beat % 2 == 0 ? 1046.5 : 1318.5);
                 }
                 writer.Write((short)Math.Round(Math.Max(-1, Math.Min(1, sound)) * Int16.MaxValue));
             }

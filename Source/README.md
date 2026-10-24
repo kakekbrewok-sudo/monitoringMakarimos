@@ -1,4 +1,4 @@
-# Source Mini Monitor 3.5.4
+# Source Mini Monitor 3.5.5
 
 Source menggunakan C# Windows Forms untuk .NET Framework 4.7.2 dan target Windows x64. Folder `Source` dan `MiniMonitor` harus berdampingan karena build memakai DLL di `MiniMonitor/sensors`.
 

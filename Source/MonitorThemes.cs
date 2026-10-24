@@ -89,7 +89,7 @@ sealed partial class MonitorWindow
         DrawText(g, "AKTIF", small, muted, new Rectangle(width - 64, 204, 46, 25), true);
         double opened = current == null ? -1 : ActivityTracker.OpenDuration(current.App, DateTime.UtcNow);
         DrawText(g, "SEJAK DIBUKA  " + (opened < 0 ? "—" : ActivityTracker.Duration(opened)), small, muted, new Rectangle(18, 236, width - 36, 21));
-        DrawText(g, reminder ? "60 MENIT+ / WAKTUNYA ISTIRAHAT" : "PENGINGAT ISTIRAHAT / 60 MENIT", small, reminder ? accent : muted, new Rectangle(18, 261, width - 36, 18));
+        PaintReminderAction(g, new Rectangle(18, 258, width - 36, 24), 283);
         ProgressRule(g, current, reminder, width, 283, 2);
         int ramWidth = 48, col = (width - 36 - ramWidth - 20) / 2;
         Metric(g, "RAM", data.MemoryValid ? data.Load + "%" : "—", 18, ramWidth, false);
@@ -131,7 +131,7 @@ sealed partial class MonitorWindow
         double opened = current == null ? -1 : ActivityTracker.OpenDuration(current.App, DateTime.UtcNow);
         DrawText(g, "DIBUKA  " + (opened < 0 ? "—" : ActivityTracker.Duration(opened)), mono, muted, new Rectangle(18, 234, width - 36, 21));
         ProgressRule(g, current, reminder, width, 261, 4);
-        DrawText(g, reminder ? "60 MENIT+ / WAKTUNYA ISTIRAHAT" : "PENGINGAT ISTIRAHAT / 60 MENIT", small, reminder ? accent : muted, new Rectangle(18, 271, width - 36, 18));
+        PaintReminderAction(g, new Rectangle(18, 268, width - 36, 22));
         int ramWidth = 48, col = (width - 36 - ramWidth - 20) / 2;
         Metric(g, "RAM", data.MemoryValid ? data.Load + "%" : "—", 18, ramWidth, false);
         Metric(g, "CPU", data.Cpu.UsageAndTemperature, 18 + ramWidth + 10, col, true);
