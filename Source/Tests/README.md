@@ -43,3 +43,5 @@ WindowChecks memeriksa ukuran normal, lebar 1080x300/680x300, portrait, overlay,
 FanBoostChecks memakai perangkat palsu: 15 detik, AUTO/manual, pembatalan, konflik controller, rollback parsial, dan journal. Tidak mengubah kipas asli. CoolingUiChecks merender tombol di seluruh tema/ukuran dan menguji aksesibilitas/countdown tanpa klik hardware.
 
 ReminderUiChecks memeriksa klik tombol/bar konfirmasi, total waktu yang dipertahankan, reset pengingat, kunci klik, dan render empat tema pada tiga layout. Tidak memutar suara atau menjalankan tindakan daya.
+
+FireworksChecks memeriksa partikel dari tengah yang memenuhi panel, batas enam detik, pemicu jam aktif saat mute, konfirmasi istirahat, persistensi toggle, preview, hidden/minimize/lock/suspend, serta render empat tema pada tiga layout. Uji desktop terpisah memeriksa menu tray, fokus, polling sensor/jam, FPS animasi, CPU/memori dan kebocoran handle GDI. Kompilasikan juga ThemeTrayPollingChecks.cs untuk DesktopTestRunner; argumen folder keluaran. Tidak membunyikan pengingat atau menjalankan kontrol kipas/daya.

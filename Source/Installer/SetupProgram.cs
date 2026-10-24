@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -129,7 +129,7 @@ sealed class SetupWindow : Form
         Label brand = LabelAt("\u25cf  MINI / MONITOR", 30, 25, 540, 28, 11, FontStyle.Bold); brand.ForeColor = red;
         LabelAt(remove ? "Sampai jumpa." : "Semua dalam satu pandangan.", 30, 74, 540, 42, 21, FontStyle.Bold);
         detail.SetBounds(32, 125, 530, 58); detail.ForeColor = muted;
-        detail.Text = remove ? "Hapus aplikasi, shortcut, dan startup Windows.\nTema serta pengaturanmu tetap disimpan." : "Jam, durasi aplikasi, FPS, dan sensor perangkat.\nVersi 3.5.5  /  Windows 64-bit  /  Paket offline";
+        detail.Text = remove ? "Hapus aplikasi, shortcut, dan startup Windows.\nTema serta pengaturanmu tetap disimpan." : "Jam, durasi aplikasi, FPS, dan sensor perangkat.\nVersi 3.5.6  /  Windows 64-bit  /  Paket offline";
         Controls.Add(detail);
         Panel line = new Panel { BackColor = Color.FromArgb(50, 50, 50) }; line.SetBounds(32, 200, 536, 1); Controls.Add(line);
         if (!remove) {

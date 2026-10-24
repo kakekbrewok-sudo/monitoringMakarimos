@@ -1,18 +1,20 @@
-# Mini Monitor 3.5.5
+# Mini Monitor 3.5.6
 
 Monitor Windows ringan untuk jam, durasi aplikasi aktif, RAM, CPU, GPU, suhu SSD/HDD, dan FPS game dalam satu tampilan. Mendukung mode overlay dan jendela yang dapat diubah ukurannya, empat tema, tray menu, startup Windows, serta pengingat satu jam.
 
-![Mini Monitor 3.5.5](Pratinjau/MiniMonitor-3.5.5.png)
+![Mini Monitor](Pratinjau/MiniMonitor.png)
 
 ## Instalasi
 
-Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.5-x64.exe`](Installer/MiniMonitor-Setup-3.5.5-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
+Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.6-x64.exe`](Installer/MiniMonitor-Setup-3.5.6-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
 
 Checksum SHA-256 tersedia di [`Installer/SHA256.txt`](Installer/SHA256.txt). Windows 10 versi 2004+ atau Windows 11 x64 dan .NET Framework 4.7.2+ diperlukan.
 
 ## Pengingat istirahat
 
 Setelah 60 menit aktif, klik **✓ SUDAH ISTIRAHAT** atau bar pengingat untuk mengulang hitungan pengingat. Total waktu aktif tetap lanjut; pengingat berikutnya muncul setelah 60 menit aktif penuh sejak konfirmasi. Bunyi delapan nada bergantian berlangsung sekitar 2,4 detik, terpisah dari bunyi pergantian jam.
+
+Setiap satu jam aktif juga memunculkan tiga gelombang kembang api pixel dari tengah panel selama **6 detik**. Warna mengikuti tema; efek tetap berjalan saat suara dimatikan. Klik **SUDAH ISTIRAHAT** menghentikan efek. Klik kanan > **Efek pengingat pixel** untuk aktif/nonaktif atau **Coba efek** untuk preview tanpa mengubah hitungan. Efek dilewati saat tersembunyi, minimized, atau Windows terkunci. Timer animasi hanya hidup selama efek berlangsung.
 
 ## Pendinginan GPU
 

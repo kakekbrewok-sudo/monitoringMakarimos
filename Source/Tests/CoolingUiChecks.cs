@@ -63,7 +63,7 @@ static class CoolingUiChecks
                 sample.Disks.Add(new Reading("SSD", "PNY CS2340 1TB SSD") { Value = 54 });
                 sample.Disks.Add(new Reading("SSD", "XPG GAMMIX S70 BLADE") { Value = 63 });
                 sample.Disks.Add(new Reading("HDD", "TOSHIBA MQ01ABD050") { Value = 44 });
-                Set(form, "data", sample); Set(form, "lastPoll", DateTime.Now);
+                Set(form, "data", sample); Set(form, "lastPoll", DateTime.Now); Call(form, "UpdateCooling");
                 var app = new AppIdentity { Name = "CONTROL Resonant", Key = "cooling-ui-fixture", ProcessId = -1,
                     ExecutablePath = @"D:\Games\Control\Control.exe", OpenedUtc = DateTime.UtcNow.AddSeconds(-4508) };
                 var tracker = (ActivityTracker)Get(form, "activity");

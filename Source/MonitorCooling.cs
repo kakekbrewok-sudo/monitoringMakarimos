@@ -94,29 +94,30 @@ sealed partial class MonitorWindow
         UpdateCooling();
     }
     bool CoolingSupported { get { return data.Gpu.Name != null && data.Gpu.Name.IndexOf("NVIDIA", StringComparison.OrdinalIgnoreCase) >= 0; } }
+    void ApplyCoolingPalette(CoolingButton button)
+    {
+        Color surface = theme == MonitorTheme.GShock ? Color.FromArgb(189, 197, 166) : BackColor;
+        if (button.Surface == surface && button.Ink == accent && button.ActiveSurface == accent) return;
+        button.Surface = surface; button.Ink = accent; button.ActiveSurface = accent;
+        button.Invalidate();
+    }
     void PlaceCoolingButton(int x, int y, int size)
     {
         Rectangle bounds = new Rectangle(S(x), S(y), Math.Max(18, S(size)), Math.Max(18, S(size)));
         if (coolingButton.Bounds != bounds) coolingButton.Bounds = bounds;
-        coolingButton.Surface = theme == MonitorTheme.GShock ? Color.FromArgb(189, 197, 166) : BackColor;
-        coolingButton.Ink = accent; coolingButton.ActiveSurface = accent;
-        UpdateCooling();
+        ApplyCoolingPalette(coolingButton);
     }
     void PlaceShutdownButton(int x, int y, int size)
     {
         Rectangle bounds = new Rectangle(S(x), S(y), Math.Max(18, S(size)), Math.Max(18, S(size)));
         if (coolingShutdownButton.Bounds != bounds) coolingShutdownButton.Bounds = bounds;
-        coolingShutdownButton.Surface = theme == MonitorTheme.GShock ? Color.FromArgb(189, 197, 166) : BackColor;
-        coolingShutdownButton.Ink = accent; coolingShutdownButton.ActiveSurface = accent;
-        UpdateCooling();
+        ApplyCoolingPalette(coolingShutdownButton);
     }
     void PlaceSleepButton(int x, int y, int size)
     {
         Rectangle bounds = new Rectangle(S(x), S(y), Math.Max(18, S(size)), Math.Max(18, S(size)));
         if (coolingSleepButton.Bounds != bounds) coolingSleepButton.Bounds = bounds;
-        coolingSleepButton.Surface = theme == MonitorTheme.GShock ? Color.FromArgb(189, 197, 166) : BackColor;
-        coolingSleepButton.Ink = accent; coolingSleepButton.ActiveSurface = accent;
-        UpdateCooling();
+        ApplyCoolingPalette(coolingSleepButton);
     }
     void UpdateCooling()
     {

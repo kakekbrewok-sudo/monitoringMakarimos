@@ -9,7 +9,7 @@ sealed partial class MonitorWindow
     readonly Font wideDuration = new Font("Consolas", 26f, FontStyle.Regular);
     readonly Font widePosterClock = new Font("Consolas", 43f, FontStyle.Bold);
 
-    // One native paint pass, with no animation, textures, external fonts or new timers.
+    // Native dashboard paint; temporary reminder particles are drawn afterward.
     void PaintDesignedWide(Graphics g)
     {
         bool paper = theme == MonitorTheme.DotWhite, poster = theme == MonitorTheme.KanjiArt;

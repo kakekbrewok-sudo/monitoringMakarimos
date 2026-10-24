@@ -1,7 +1,7 @@
-MINI MONITOR (v3.5.5)
+﻿MINI MONITOR (v3.5.6)
 
 INSTALLER OFFLINE
-Jalankan MiniMonitor-Setup-3.5.5-x64.exe untuk memasang atau memperbarui.
+Jalankan MiniMonitor-Setup-3.5.6-x64.exe untuk memasang atau memperbarui.
 Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
 Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
 hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
@@ -52,8 +52,8 @@ Empat tema digambar langsung oleh aplikasi. Klik kanan overlay atau ikon tray
 Pilihan tema langsung berlaku dan disimpan untuk pembukaan/login berikutnya.
 Dot Hitam dipakai jika belum ada pilihan tema. Ukuran dan posisi tetap sama
 saat berganti tema, dan menu tetap dapat digunakan selama timer berjalan.
-Semua tema memakai timer satu detik yang sudah ada, tanpa animasi halus
-atau timer tambahan. Font bawaan Windows dimuat sekali dan dipakai ulang.
+Semua tema memakai timer jam satu detik. Timer animasi hanya berjalan selama
+efek pengingat enam detik. Font bawaan Windows dimuat sekali dan dipakai ulang.
 Tidak perlu memasang font, browser, atau webview. Tidak ada tooltip hover.
 Jam mengikuti waktu dan zona waktu Windows, format 24 jam.
 
@@ -142,8 +142,9 @@ proses yang memiliki jendela aktif. Setiap proses dianggap sesi terpisah.
 
 Setelah 60 menit aktif pada satu sesi aplikasi, durasi dan teks pengingat
 berubah merah. Tidak ada notifikasi popup atau jendela yang merebut fokus.
-Setelah istirahat: klik kanan > Sudah istirahat. Pengingat berikutnya muncul
-pada kelipatan 60 menit aktif berikutnya. Reset waktu aktif tersedia di menu.
+Setelah istirahat: klik tombol/bar SUDAH ISTIRAHAT atau pilihan klik kanan.
+Pengingat berikutnya muncul 60 menit aktif penuh sejak dikonfirmasi.
+Reset waktu aktif tersedia di menu.
 
 BUNYI SINGKAT (DEFAULT AKTIF)
 - Pergantian jam Windows, misalnya 14:59:59 menjadi 15:00:00:
@@ -232,3 +233,18 @@ Total waktu aktif tetap berjalan. Bar kosong kembali dan pengingat berikutnya
 muncul setelah 60 menit aktif penuh sejak diklik, tanpa popup.
 Bunyi pengingat aktif memakai 8 nada bergantian selama sekitar 2,4 detik.
 Bunyi pergantian jam tetap dua nada singkat; keduanya dapat dimatikan lewat menu.
+
+EFEK PENGINGAT PIXEL (DEFAULT AKTIF)
+Setiap satu jam aktif sejak konfirmasi terakhir, tiga gelombang kembang api
+pixel menyebar dari tengah ke seluruh panel selama enam detik, lalu memudar.
+Merah-putih pada tema hitam; merah-gelap pada tema terang agar terbaca.
+Efek tetap bisa berjalan saat suara dimatikan dan tidak mengambil fokus.
+Klik SUDAH ISTIRAHAT menghentikan efek tanpa menghapus total waktu aktif.
+Klik kanan > Efek pengingat pixel untuk aktif/nonaktif; pilihan tersimpan.
+Klik kanan > Coba efek untuk preview enam detik tanpa mengubah hitungan.
+Preview eksplisit tetap bisa dicoba meski efek otomatis dimatikan.
+Efek dilewati saat jendela tersembunyi, minimized, atau Windows terkunci.
+Hide, minimize, suspend, atau penutupan aplikasi menghentikan animasi.
+Pengingat yang dilewati tidak diputar ulang saat jendela ditampilkan kembali.
+Animasi memakai paling banyak 96 partikel dan timer sementara sekitar 30 FPS;
+pembacaan sensor dan kipas tetap berjalan pada interval biasanya.
