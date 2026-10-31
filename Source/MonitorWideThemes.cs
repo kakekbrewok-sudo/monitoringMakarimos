@@ -15,7 +15,7 @@ sealed partial class MonitorWindow
         bool paper = theme == MonitorTheme.DotWhite, poster = theme == MonitorTheme.KanjiArt;
         DateTime now = DateTime.Now;
         bool status = lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null;
-        int contentHeight = Math.Max(244, 145 + Math.Max(1, data.Disks.Count) * 26 + 8 + (status ? 24 : 0));
+        int contentHeight = Math.Max(298, 145 + Math.Max(1, data.Disks.Count) * 26 + 8 + (status ? 24 : 0));
         scale = Math.Min(ClientSize.Width / 900f, ClientSize.Height / (float)contentHeight);
         int width = (int)(ClientSize.Width / scale), height = (int)(ClientSize.Height / scale);
         if (paper) WideFill(g, Color.FromArgb(243, 237, 230), 0, 0, 267, height);
@@ -39,6 +39,7 @@ sealed partial class MonitorWindow
         PlaceSleepButton(180, 165, 32);
         PlaceShutdownButton(218, 165, 32);
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, 211, 235, 23));
+        PlaceLauncherButtons(20, 242, 235, 42);
         using (var pen = new Pen(rule)) {
             g.DrawLine(pen, S(267), S(15), S(267), S(height - 15));
             g.DrawLine(pen, S(566), S(15), S(566), S(height - 15));

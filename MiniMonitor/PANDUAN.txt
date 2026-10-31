@@ -1,7 +1,7 @@
-﻿MINI MONITOR (v3.5.6)
+﻿MINI MONITOR (v3.5.7)
 
 INSTALLER OFFLINE
-Jalankan MiniMonitor-Setup-3.5.6-x64.exe untuk memasang atau memperbarui.
+Jalankan MiniMonitor-Setup-3.5.7-x64.exe untuk memasang atau memperbarui.
 Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
 Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
 hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
@@ -41,6 +41,23 @@ diekstrak lengkap. Aplikasi akan meminta akses administrator untuk sensor.
 Hanya satu instans berjalan dalam sesi pengguna yang sama.
 
 TAMPILAN DAN KONTROL
+APLIKASI FAVORIT
+Empat kotak ikon berada di bawah tanggal pada layout lebar. Pada layout
+vertikal/overlay, baris ikon berada di bawah daftar penyimpanan.
+Klik kotak + untuk memilih aplikasi .exe atau shortcut .lnk, .url, .appref-ms.
+Gunakan shortcut dari Desktop / Start Menu untuk game Steam/EA atau aplikasi
+yang memerlukan argumen khusus; shortcut dan argumennya tetap dipakai utuh.
+Klik ikon terisi untuk membuka aplikasi. Klik kanan ikon untuk mengganti atau
+menghapus favorit. Menghapus favorit tidak menghapus aplikasi aslinya.
+Pengaturan yang sama tersedia lewat klik kanan tray > Aplikasi favorit.
+Empat pilihan disimpan untuk pembukaan dan login Windows berikutnya.
+Jika file dipindah/dihapus, ganti favorit lewat klik kanan ikon.
+Jika mode klik tembus aktif, buka kunci dengan Ctrl+Alt+L untuk memakai ikon.
+Ikon di-cache dan hanya dibaca saat startup atau favorit diganti.
+Launcher tidak menambah timer, layanan, atau proses yang terus berjalan.
+Aplikasi dibuka melalui shell desktop dengan izin pengguna biasa; aplikasi
+yang memang meminta administrator tetap mengikuti permintaan Windows sendiri.
+
 Empat tema digambar langsung oleh aplikasi. Klik kanan overlay atau ikon tray
 > Tema, lalu pilih:
 - Dot Hitam (default): tampilan dot-matrix asli, hitam dengan aksen merah.

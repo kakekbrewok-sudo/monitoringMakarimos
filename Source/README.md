@@ -1,4 +1,4 @@
-﻿# Source Mini Monitor 3.5.6
+﻿# Source Mini Monitor 3.5.7
 
 Source menggunakan C# Windows Forms untuk .NET Framework 4.7.2 dan target Windows x64. Folder `Source` dan `MiniMonitor` harus berdampingan karena build memakai DLL di `MiniMonitor/sensors`.
 
@@ -22,6 +22,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Source\Installer\Build-Ins
 - `GpuFanBoost.cs`, `MonitorCooling.cs`: pendinginan GPU, pemulihan kipas, shutdown, dan Sleep opsional.
 - `SoftChimes.cs`: bunyi pergantian jam dan pengingat satu jam aktif.
 - `MonitorFireworks.cs`: efek pengingat pixel enam detik, timer sementara, dan pilihan tray.
+- `MonitorLauncher.cs`, `LauncherShell.cs`: empat aplikasi favorit, ikon yang di-cache, dan pembukaan melalui shell desktop Windows.
 - `StartupIntegration.cs`: integrasi Task Scheduler.
 - `Installer/`: builder dan engine installer/uninstaller.
 - `Tests/`: pengujian unit, integrasi, UI offscreen, FPS, dan kipas palsu.

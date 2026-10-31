@@ -1,4 +1,4 @@
-# Mini Monitor 3.5.6
+# Mini Monitor 3.5.7
 
 Monitor Windows ringan untuk jam, durasi aplikasi aktif, RAM, CPU, GPU, suhu SSD/HDD, dan FPS game dalam satu tampilan. Mendukung mode overlay dan jendela yang dapat diubah ukurannya, empat tema, tray menu, startup Windows, serta pengingat satu jam.
 
@@ -6,9 +6,15 @@ Monitor Windows ringan untuk jam, durasi aplikasi aktif, RAM, CPU, GPU, suhu SSD
 
 ## Instalasi
 
-Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.6-x64.exe`](Installer/MiniMonitor-Setup-3.5.6-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
+Unduh dan jalankan [`Installer/MiniMonitor-Setup-3.5.7-x64.exe`](Installer/MiniMonitor-Setup-3.5.7-x64.exe). Installer bersifat offline dan berisi aplikasi, pembaca sensor, PresentMon, serta installer PawnIO opsional untuk sensor CPU.
 
 Checksum SHA-256 tersedia di [`Installer/SHA256.txt`](Installer/SHA256.txt). Windows 10 versi 2004+ atau Windows 11 x64 dan .NET Framework 4.7.2+ diperlukan.
+
+## Aplikasi favorit
+
+Empat slot ikon di bawah tanggal pada layout lebar memudahkan membuka aplikasi yang sering dipakai. Klik **+** untuk memilih EXE atau shortcut `.lnk`, `.url`, `.appref-ms`; setelah terisi, klik ikon untuk membuka aplikasi. Klik kanan ikon untuk mengganti atau menghapus favorit. Pilihan yang sama tersedia lewat **Aplikasi favorit** pada menu tray dan tersimpan untuk login berikutnya.
+
+Pada layout vertikal/overlay, baris ikon berada di bawah daftar penyimpanan. Ikon di-cache, tanpa timer atau proses launcher tambahan. Shortcut mempertahankan argumen dan folder kerja; pembukaan melalui shell desktop memakai izin pengguna biasa. Jika klik tembus aktif, buka kunci dengan **Ctrl+Alt+L**.
 
 ## Pengingat istirahat
 

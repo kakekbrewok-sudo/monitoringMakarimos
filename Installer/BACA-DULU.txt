@@ -1,6 +1,6 @@
-MINI MONITOR 3.5.6 — INSTALLER OFFLINE
+MINI MONITOR 3.5.7 — INSTALLER OFFLINE
 
-Simpan MiniMonitor-Setup-3.5.6-x64.exe. Cukup file ini untuk memasang ulang;
+Simpan MiniMonitor-Setup-3.5.7-x64.exe. Cukup file ini untuk memasang ulang;
 tidak perlu menyalin folder Source, ZIP portable, atau file lain.
 
 1. Klik dua kali installer, izinkan permintaan administrator Windows.
@@ -35,3 +35,5 @@ Komponen pihak ketiga dan sumber lisensi tercantum dalam THIRD-PARTY.txt
 serta folder licenses yang ikut dipasang. Paket tidak mengunduh komponen lain.
 
 Pengingat pixel enam detik: klik kanan > Efek pengingat pixel / Coba efek.
+
+Aplikasi favorit: klik + pada baris ikon untuk memilih EXE / shortcut. Klik kanan ikon untuk ganti atau hapus.

@@ -1,4 +1,4 @@
-﻿// Mini Monitor 3.5.6: native Windows Forms / .NET Framework 4.7.2+.
+﻿// Mini Monitor 3.5.7: native Windows Forms / .NET Framework 4.7.2+.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -159,7 +159,7 @@ sealed class SensorReader : IDisposable
     }
     public string Report(Snapshot s)
     {
-        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.6 | " + s.Timestamp.ToString("s"));
+        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.7 | " + s.Timestamp.ToString("s"));
         b.AppendLine("Administrator: " + Native.Admin + " | PawnIO installed: " + Native.DriverInstalled);
         b.AppendLine(String.Format(CultureInfo.InvariantCulture, "RAM: {0:0.00}/{1:0.00} GB ({2}%)", s.Used, s.Total, s.Load));
         foreach (Reading r in new[] { s.Cpu, s.Gpu }.Concat(s.Disks)) b.AppendLine(r.Kind + " | " + r.Name + " | " + r.Sensor + " | " + (r.Value.HasValue ? r.Value.Value.ToString("0.0", CultureInfo.InvariantCulture) + " C" : "unavailable") + " | Load " + (r.Load.HasValue ? r.Load.Value.ToString("0.0", CultureInfo.InvariantCulture) + "% (" + r.LoadSensor + ")" : "n/a") + " | " + r.Error);
@@ -209,7 +209,7 @@ sealed partial class MonitorWindow : Form
         using (Graphics g = CreateGraphics()) scale = dpiScale = g.DpiX / 96f;
         ReadSettings(); if (overlayOverride.HasValue) overlay = overlayOverride.Value;
         SetTheme(theme, false);
-        BuildMenu(); InitializeCooling(); InitializeFireworks(); ContextMenuStrip = menu;
+        BuildMenu(); InitializeCooling(); InitializeFireworks(); InitializeLauncher(); ContextMenuStrip = menu;
         using (Stream iconStream = typeof(MonitorWindow).Assembly.GetManifestResourceStream("MiniMonitor.Icon"))
         using (var sourceIcon = new Icon(iconStream))
         {
@@ -227,7 +227,7 @@ sealed partial class MonitorWindow : Form
             chimes.Play(cue); HandleVisualReminder(activity.ActiveHourReached); UpdateCooling(); Invalidate();
         };
         SystemEvents.SessionSwitch += SessionChanged; SystemEvents.PowerModeChanged += PowerChanged;
-        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && TryAcknowledgeReminder(e.Location)) return; if (e.Button == MouseButtons.Left && !locked && !coolingButton.Bounds.Contains(e.Location) && !coolingShutdownButton.Bounds.Contains(e.Location) && !coolingSleepButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
+        MouseDown += (s, e) => { if (e.Button == MouseButtons.Left && TryAcknowledgeReminder(e.Location)) return; if (e.Button == MouseButtons.Left && !locked && !InLauncher(e.Location) && !coolingButton.Bounds.Contains(e.Location) && !coolingShutdownButton.Bounds.Contains(e.Location) && !coolingSleepButton.Bounds.Contains(e.Location)) { Native.ReleaseCapture(); Native.SendMessage(Handle, 0xA1, new IntPtr(2), IntPtr.Zero); } };
         MouseDoubleClick += (s, e) => { if (overlay && e.Button == MouseButtons.Left && !locked) SetOverlay(false); };
         Resize += (s, e) => {
             if (WindowState == FormWindowState.Minimized) StopFireworks();
@@ -314,7 +314,7 @@ sealed partial class MonitorWindow : Form
         menu.Opening += (s, e) => { fpsMenuApp = activity.Selected == null ? null : activity.Selected.App; startupItem.Checked = StartupIntegration.IsEnabled(); RefreshMenuState(); };
         menu.Closed += (s, e) =>
         {
-            if (!closing && IsHandleCreated) BeginInvoke(new Action(() => { if (!closing && !menu.Visible) ApplyLayout(); }));
+            if (!closing && IsHandleCreated) BeginInvoke(new Action(() => { if (!closing && !menu.Visible && !launcherMenu.Visible) ApplyLayout(); }));
         };
     }
     void ConfigureMenuBehavior(ToolStripDropDown dropdown)
@@ -383,7 +383,7 @@ sealed partial class MonitorWindow : Form
         applyingLayout = false;
         ApplyLayout(); SaveSettings(); Invalidate();
     }
-    int ContentHeight { get { return 354 + Math.Max(1, data.Disks.Count) * 23 + (lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null ? 18 : 0); } }
+    int ContentHeight { get { return 414 + Math.Max(1, data.Disks.Count) * 23 + (lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null ? 18 : 0); } }
     void ApplyLayout()
     {
         applyingLayout = true;
@@ -423,7 +423,7 @@ sealed partial class MonitorWindow : Form
                 // Keep menu interaction stable even when sensors appearing or
                 // disappearing change the required window size. Values and the
                 // clock keep painting; deferred geometry applies after closing.
-                if (!menu.Visible) ApplyLayout();
+                if (!menu.Visible && !launcherMenu.Visible) ApplyLayout();
                 Invalidate();
             }
         }
@@ -451,13 +451,14 @@ sealed partial class MonitorWindow : Form
         else if (theme == MonitorTheme.GShock) PaintGShock(g, now, width);
         else PaintDot(g, now, width);
         PaintDisks(g, width);
+        PlaceLauncherButtons(18, 350 + Math.Max(1, data.Disks.Count) * 23, width - 36, 42);
         PaintFireworks(g);
     }
     void PaintWide(Graphics g)
     {
         if (theme != MonitorTheme.GShock) { PaintDesignedWide(g); return; }
         int rows = Math.Max(1, data.Disks.Count);
-        scale = Math.Min(ClientSize.Width / 900f, ClientSize.Height / (float)Math.Max(240, 128 + rows * 26));
+        scale = Math.Min(ClientSize.Width / 900f, ClientSize.Height / (float)Math.Max(264, 128 + rows * 26));
         int width = (int)(ClientSize.Width / scale), height = (int)(ClientSize.Height / scale);
         bool watch = theme == MonitorTheme.GShock;
         if (watch) using (var lcd = new SolidBrush(Color.FromArgb(189, 197, 166))) g.FillRectangle(lcd, 0, 0, ClientSize.Width, ClientSize.Height);
@@ -475,6 +476,7 @@ sealed partial class MonitorWindow : Form
         PlaceShutdownButton(220, 132, 28);
         DrawText(g, now.ToString("ss") + " SEC", compact, accent, new Rectangle(20, 132, 190, 28));
         DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, 173, 225, 26));
+        PlaceLauncherButtons(20, 208, 228, 40);
         AppSession current = activity.Selected;
         bool reminder = current != null && current.ReminderDue;
         DrawText(g, ActivityLabel(current), small, muted, new Rectangle(280, 17, 260, 25));
@@ -591,7 +593,8 @@ sealed partial class MonitorWindow : Form
             DrawText(g, label, small, muted, new Rectangle(x, 291, 35, 19));
             DrawText(g, data.Gpu.Load.HasValue ? data.Gpu.Load.Value.ToString("0") + "%" : "—", usageFont, ForeColor, new Rectangle(x + 35, 291, width - 35, 19), true);
             DrawText(g, data.Gpu.Text, usageFont, ForeColor, new Rectangle(x, 310, width - 28, 25));
-            PlaceCoolingButton(x + width - 26, 309, 24);
+            int buttonY = Math.Min(309, 333 - (int)Math.Ceiling(Math.Max(18, S(24)) / scale));
+            PlaceCoolingButton(x + width - 26, buttonY, 24);
         } else { DrawText(g, label, small, muted, new Rectangle(x, 291, width, 19)); DrawText(g, reading, usage ? usageFont : compact, ForeColor, new Rectangle(x, 310, width, 25)); }
     }
     void DrawText(Graphics g, string text, Font font, Color color, Rectangle r, bool right = false)
@@ -660,6 +663,7 @@ sealed partial class MonitorWindow : Form
                 if (p[0] == "clockSound") clockSound = p[1] == "1"; if (p[0] == "appSound") appSound = p[1] == "1";
                 if (p[0] == "keepMenuOpen") keepMenuOpen = p[1] == "1";
                 if (p[0] == "pixelReminder") pixelReminder = p[1] == "1";
+                if (p[0] == "launchers") launcherSlots.Restore(p[1]);
                 if (p[0] == "theme") theme = ThemeCatalog.Parse(p[1]);
                 if (p[0] == "fpsEnabled") fpsEnabled = p[1] == "1";
                 if (p[0] == "fpsApps") fpsRules.Restore(p[1]);
@@ -670,13 +674,13 @@ sealed partial class MonitorWindow : Form
         }
         catch { }
     }
-    void SaveSettings() { try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllLines(settingsPath, new[] { "windowWidth=" + windowSize.Width, "windowHeight=" + windowSize.Height, "windowMaximized=" + (windowMaximized ? "1" : "0"), "overlay=" + (overlay ? "1" : "0"), "pin=" + (pin ? "1" : "0"), "interval=" + interval, "x=" + Left, "y=" + Top, "opacity=" + overlayOpacity.ToString(CultureInfo.InvariantCulture), "clockSound=" + (clockSound ? "1" : "0"), "appSound=" + (appSound ? "1" : "0"), "keepMenuOpen=" + (keepMenuOpen ? "1" : "0"), "pixelReminder=" + (pixelReminder ? "1" : "0"), "theme=" + ThemeCatalog.Keys[(int)theme], "fpsEnabled=" + (fpsEnabled ? "1" : "0"), "fpsApps=" + fpsRules.Serialize() }); } catch { } }
+    void SaveSettings() { try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllLines(settingsPath, new[] { "windowWidth=" + windowSize.Width, "windowHeight=" + windowSize.Height, "windowMaximized=" + (windowMaximized ? "1" : "0"), "overlay=" + (overlay ? "1" : "0"), "pin=" + (pin ? "1" : "0"), "interval=" + interval, "x=" + Left, "y=" + Top, "opacity=" + overlayOpacity.ToString(CultureInfo.InvariantCulture), "clockSound=" + (clockSound ? "1" : "0"), "appSound=" + (appSound ? "1" : "0"), "keepMenuOpen=" + (keepMenuOpen ? "1" : "0"), "pixelReminder=" + (pixelReminder ? "1" : "0"), "theme=" + ThemeCatalog.Keys[(int)theme], "fpsEnabled=" + (fpsEnabled ? "1" : "0"), "launchers=" + launcherSlots.Serialize(), "fpsApps=" + fpsRules.Serialize() }); } catch { } }
     async void HandleClosing(object sender, FormClosingEventArgs e)
     {
         if (mayClose) return; e.Cancel = true; if (closing) return; closing = true; StopFireworks(); timer.Stop(); clockTimer.Stop(); SaveSettings(); Invalidate(); if (!busy) await FinishClose();
     }
     async Task FinishClose() { if (mayClose) return; CancelCooling(); if (coolingTask != null) await Task.WhenAny(coolingTask, Task.Delay(3000)); await fpsReader.StopAsync(); if (reader != null) { SensorReader old = reader; reader = null; await Task.Run(() => old.Dispose()); } mayClose = true; Close(); }
-    protected override void Dispose(bool disposing) { if (disposing) { SystemEvents.SessionSwitch -= SessionChanged; SystemEvents.PowerModeChanged -= PowerChanged; ClearScaledFonts(); DisposeFireworks(); timer.Dispose(); clockTimer.Dispose(); chimes.Dispose(); fpsReader.Dispose(); tray.Visible = false; tray.Dispose(); menu.Dispose(); if (appIcon != null) appIcon.Dispose(); if (trayIcon != null) trayIcon.Dispose(); clearClock.Dispose(); heading.Dispose(); small.Dispose(); value.Dispose(); compact.Dispose(); appFont.Dispose(); usageFont.Dispose(); DisposeThemeFonts(); DisposeWideFonts(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { SystemEvents.SessionSwitch -= SessionChanged; SystemEvents.PowerModeChanged -= PowerChanged; ClearScaledFonts(); DisposeLauncher(); DisposeFireworks(); timer.Dispose(); clockTimer.Dispose(); chimes.Dispose(); fpsReader.Dispose(); tray.Visible = false; tray.Dispose(); menu.Dispose(); if (appIcon != null) appIcon.Dispose(); if (trayIcon != null) trayIcon.Dispose(); clearClock.Dispose(); heading.Dispose(); small.Dispose(); value.Dispose(); compact.Dispose(); appFont.Dispose(); usageFont.Dispose(); DisposeThemeFonts(); DisposeWideFonts(); } base.Dispose(disposing); }
     internal void Render(Snapshot sample, bool compactMode, string path)
     {
         data = sample; lastPoll = DateTime.Now; UpdateCooling(); overlay = compactMode; windowInitialized = false; activity.Poll(); ApplyLayout();

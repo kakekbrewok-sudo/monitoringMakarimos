@@ -138,6 +138,11 @@ static class FireworksChecks
         clockTimer.Stop(); sensorTimer.Stop();
         Check(clockTicks>=5 && clockTicks<=7 && sensorTicks>=5 && sensorTicks<=7 && (DateTime)Get(form,"lastPoll")>lastPoll,"live clock and sensors retain their own polling rate during animation");
         Check(menu.Visible && !Running(form),"tray menu remains usable across live polling and animation completion"); menu.Close();
+        var launcherMenu=(ContextMenuStrip)Get(form,"launcherMenu");
+        var launcherButtons=(LauncherButton[])Get(form,"launcherButtons");
+        launcherMenu.Show(launcherButtons[0],new Point(0,launcherButtons[0].Height)); clockTimer.Start(); sensorTimer.Start();
+        await Task.Delay(3300); clockTimer.Stop(); sensorTimer.Stop();
+        Check(launcherMenu.Visible && launcherMenu.SourceControl==launcherButtons[0],"favorite icon context menu survives live clock/sensor updates"); launcherMenu.Close();
         Call(form,"StartFireworks",true); Set(form,"closing",true); Call(form,"AdvanceFireworks",1.0); Check(!Running(form),"closing stops effect"); Set(form,"closing",false);
     }
     [STAThread] static int Main(string[] args) {
