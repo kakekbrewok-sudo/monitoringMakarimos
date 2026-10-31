@@ -40,7 +40,7 @@ static class LauncherChecks
                 data.Disks.Add(new Reading("HDD","TOSHIBA MQ01ABD050") {Value=39});
                 Set(form,"data",data); Set(form,"lastPoll",DateTime.Now); Call(form,"UpdateCooling");
                 var tracker=(ActivityTracker)Get(form,"activity"); tracker.Advance(new AppIdentity {Key="launcher-fixture",Name="Codex",ProcessId=-1},0,false); tracker.Selected.ActiveSeconds=3647;
-                Call(form,"SetLauncher",0,app); Call(form,"SetLauncher",1,Application.ExecutablePath); Call(form,"SetLauncher",2,app);
+                Call(form,"SetLauncher",0,app); Call(form,"SetLauncher",1,Application.ExecutablePath); Call(form,"SetLauncher",2,app); Call(form,"SetLauncher",3,null);
                 var buttons=(LauncherButton[])Get(form,"launcherButtons");
                 Check(buttons.Length==4 && buttons[0].AppImage!=null && buttons[3].AppImage==null,"three real cached icons and one empty plus slot");
                 Bitmap cached=buttons[0].AppImage;
@@ -64,7 +64,7 @@ static class LauncherChecks
                     Check(Object.ReferenceEquals(cached,buttons[0].AppImage),theme+" / "+mode+": painting/theme changes reuse cached icon");
                 }
                 Check(buttons[0].TabStop && buttons[0].AccessibleName.Contains("notepad"),"launcher supports keyboard focus and accessible app name");
-                Check(!((ContextMenuStrip)Get(form,"launcherMenu")).ShowItemToolTips,"no hover tooltips");
+                Check(!((ContextMenuStrip)Get(form,"launcherMenu")).ShowItemToolTips,"context-menu items have no extra tooltips");
                 string before=File.ReadAllText((string)Get(form,"settingsPath"));
                 ((LauncherSlots)Get(form,"launcherSlots")).Restore(""); Call(form,"ReadSettings");
                 Check(((LauncherSlots)Get(form,"launcherSlots"))[0]==app,"favorites reload from user settings");

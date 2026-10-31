@@ -38,7 +38,7 @@ static class ReminderUiChecks {
                     Rectangle hit=(Rectangle)Get(form,"reminderActionBounds");
                     Check(!hit.IsEmpty && form.ClientRectangle.Contains(hit),name+": reminder action is visible and inside window");
                     float scale=(float)Get(form,"scale");
-                    int barY=mode==0 ? (theme==MonitorTheme.GShock?203:204) : (theme==MonitorTheme.KanjiArt?283:theme==MonitorTheme.GShock?261:247);
+                    int barY=mode==0 ? (int)(form.ClientSize.Height/scale)-57 : (theme==MonitorTheme.KanjiArt?283:theme==MonitorTheme.GShock?261:247);
                     Check(hit.Contains(new Point(hit.Left+hit.Width/2,(int)Math.Round(barY*scale)+1)),name+": reminder bar is also clickable");
                     Check(!(bool)Call(form,"TryAcknowledgeReminder",new Point(-1,-1)),name+": clicks outside action preserve reminder");
                     Point target=new Point(hit.Left+hit.Width/2,hit.Top+hit.Height/2);

@@ -1,7 +1,7 @@
-﻿MINI MONITOR (v3.5.7)
+﻿MINI MONITOR (v3.5.8)
 
 INSTALLER OFFLINE
-Jalankan MiniMonitor-Setup-3.5.7-x64.exe untuk memasang atau memperbarui.
+Jalankan MiniMonitor-Setup-3.5.8-x64.exe untuk memasang atau memperbarui.
 Satu file EXE memuat aplikasi, sensor, FPS, dan installer driver CPU.
 Pilih startup Windows dan shortcut desktop sesuai kebutuhan. Driver PawnIO
 hanya ditawarkan bila belum terpasang. Internet tidak diperlukan.
@@ -54,6 +54,8 @@ Empat pilihan disimpan untuk pembukaan dan login Windows berikutnya.
 Jika file dipindah/dihapus, ganti favorit lewat klik kanan ikon.
 Jika mode klik tembus aktif, buka kunci dengan Ctrl+Alt+L untuk memakai ikon.
 Ikon di-cache dan hanya dibaca saat startup atau favorit diganti.
+Ikon tampil tanpa bingkai. Arahkan mouse ke ikon untuk melihat nama aplikasi
+dan memperbesar ikon sedikit; ukuran kembali normal ketika mouse menjauh.
 Launcher tidak menambah timer, layanan, atau proses yang terus berjalan.
 Aplikasi dibuka melalui shell desktop dengan izin pengguna biasa; aplikasi
 yang memang meminta administrator tetap mengikuti permintaan Windows sendiri.
@@ -71,7 +73,8 @@ Dot Hitam dipakai jika belum ada pilihan tema. Ukuran dan posisi tetap sama
 saat berganti tema, dan menu tetap dapat digunakan selama timer berjalan.
 Semua tema memakai timer jam satu detik. Timer animasi hanya berjalan selama
 efek pengingat enam detik. Font bawaan Windows dimuat sekali dan dipakai ulang.
-Tidak perlu memasang font, browser, atau webview. Tidak ada tooltip hover.
+Tidak perlu memasang font, browser, atau webview. Nama hover hanya untuk ikon
+aplikasi favorit; informasi sensor dan menu tidak menampilkan tooltip tambahan.
 Jam mengikuti waktu dan zona waktu Windows, format 24 jam.
 
 - Geser overlay dengan tombol kiri mouse.

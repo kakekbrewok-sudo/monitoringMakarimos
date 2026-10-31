@@ -1,4 +1,4 @@
-﻿// Mini Monitor 3.5.7: native Windows Forms / .NET Framework 4.7.2+.
+﻿// Mini Monitor 3.5.8: native Windows Forms / .NET Framework 4.7.2+.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -159,7 +159,7 @@ sealed class SensorReader : IDisposable
     }
     public string Report(Snapshot s)
     {
-        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.7 | " + s.Timestamp.ToString("s"));
+        var b = new StringBuilder(); b.AppendLine("Mini Monitor 3.5.8 | " + s.Timestamp.ToString("s"));
         b.AppendLine("Administrator: " + Native.Admin + " | PawnIO installed: " + Native.DriverInstalled);
         b.AppendLine(String.Format(CultureInfo.InvariantCulture, "RAM: {0:0.00}/{1:0.00} GB ({2}%)", s.Used, s.Total, s.Load));
         foreach (Reading r in new[] { s.Cpu, s.Gpu }.Concat(s.Disks)) b.AppendLine(r.Kind + " | " + r.Name + " | " + r.Sensor + " | " + (r.Value.HasValue ? r.Value.Value.ToString("0.0", CultureInfo.InvariantCulture) + " C" : "unavailable") + " | Load " + (r.Load.HasValue ? r.Load.Value.ToString("0.0", CultureInfo.InvariantCulture) + "% (" + r.LoadSensor + ")" : "n/a") + " | " + r.Error);
@@ -198,6 +198,7 @@ sealed partial class MonitorWindow : Form
     float dpiScale = 1, fontScale;
     readonly Dictionary<Font, Font> scaledFonts = new Dictionary<Font, Font>();
     Size windowSize;
+    Point rememberedLocation;
     bool applyingLayout, windowInitialized, windowMaximized;
     double overlayOpacity = 1;
     DateTime lastPoll = DateTime.MinValue;
@@ -207,7 +208,7 @@ sealed partial class MonitorWindow : Form
         Text = "Mini Monitor"; BackColor = Color.FromArgb(15, 15, 15); ForeColor = Color.FromArgb(238, 238, 234);
         DoubleBuffered = true; MaximizeBox = false; AutoScaleMode = AutoScaleMode.None;
         using (Graphics g = CreateGraphics()) scale = dpiScale = g.DpiX / 96f;
-        ReadSettings(); if (overlayOverride.HasValue) overlay = overlayOverride.Value;
+        ReadSettings(); rememberedLocation = Location; if (overlayOverride.HasValue) overlay = overlayOverride.Value;
         SetTheme(theme, false);
         BuildMenu(); InitializeCooling(); InitializeFireworks(); InitializeLauncher(); ContextMenuStrip = menu;
         using (Stream iconStream = typeof(MonitorWindow).Assembly.GetManifestResourceStream("MiniMonitor.Icon"))
@@ -239,10 +240,13 @@ sealed partial class MonitorWindow : Form
             Invalidate();
         };
         ResizeEnd += (s, e) => SaveSettings();
+        LocationChanged += (s, e) => { if (!applyingLayout && (overlay || windowInitialized) && WindowState == FormWindowState.Normal) rememberedLocation = Location; };
+        Deactivate += (s, e) => { if (!closing && windowInitialized) SaveSettings(); };
         Shown += async (s, e) => { activity.Poll(); clockTimer.Start(); await PollAsync(); if (!closing) timer.Start(); };
         FormClosing += HandleClosing; ApplyLayout();
         var area = Screen.FromPoint(Location).WorkingArea;
-        if (WindowState == FormWindowState.Normal && !area.Contains(Bounds)) Location = new Point(Math.Max(area.Left, Math.Min(Left, area.Right - Width)), Math.Max(area.Top, Math.Min(Top, area.Bottom - Height)));
+        Rectangle visible = Rectangle.Intersect(Bounds, area);
+        if (WindowState == FormWindowState.Normal && (visible.Width < Math.Min(160, Width) || visible.Height < Math.Min(80, Height))) Location = new Point(Math.Max(area.Left, Math.Min(Left, area.Right - Width)), Math.Max(area.Top, Math.Min(Top, area.Bottom - Height)));
     }
     int S(int n) { return (int)Math.Round(n * scale); }
     protected override bool ShowWithoutActivation { get { return overlay; } }
@@ -371,7 +375,7 @@ sealed partial class MonitorWindow : Form
         if (style != wanted) Native.SetWindowLong(Handle, -20, wanted);
         Invalidate();
     }
-    void RestoreWindow() { SetLocked(false); Show(); WindowState = FormWindowState.Normal; Activate(); }
+    void RestoreWindow() { SetLocked(false); Show(); WindowState = !overlay && windowMaximized ? FormWindowState.Maximized : FormWindowState.Normal; Activate(); }
     void SetOverlay(bool enabled)
     {
         if (enabled == overlay) return;
@@ -458,7 +462,8 @@ sealed partial class MonitorWindow : Form
     {
         if (theme != MonitorTheme.GShock) { PaintDesignedWide(g); return; }
         int rows = Math.Max(1, data.Disks.Count);
-        scale = Math.Min(ClientSize.Width / 900f, ClientSize.Height / (float)Math.Max(264, 128 + rows * 26));
+        bool status = lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null;
+        scale = Math.Min(ClientSize.Width / 900f, ClientSize.Height / (float)Math.Max(298, 184 + rows * 30 + (status ? 40 : 18)));
         int width = (int)(ClientSize.Width / scale), height = (int)(ClientSize.Height / scale);
         bool watch = theme == MonitorTheme.GShock;
         if (watch) using (var lcd = new SolidBrush(Color.FromArgb(189, 197, 166))) g.FillRectangle(lcd, 0, 0, ClientSize.Width, ClientSize.Height);
@@ -475,35 +480,40 @@ sealed partial class MonitorWindow : Form
         PlaceSleepButton(184, 132, 28);
         PlaceShutdownButton(220, 132, 28);
         DrawText(g, now.ToString("ss") + " SEC", compact, accent, new Rectangle(20, 132, 190, 28));
-        DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, 173, 225, 26));
-        PlaceLauncherButtons(20, 208, 228, 40);
+        DrawText(g, now.ToString("ddd, dd MMM yyyy", CultureInfo.GetCultureInfo("id-ID")).ToUpperInvariant(), small, muted, new Rectangle(20, height - 87, 225, 26));
+        PlaceLauncherButtons(20, height - 56, 228, 42);
         AppSession current = activity.Selected;
         bool reminder = current != null && current.ReminderDue;
         DrawText(g, ActivityLabel(current), small, muted, new Rectangle(280, 17, 260, 25));
-        DrawText(g, current == null ? "Buka game atau aplikasi" : current.App.Name, appFont, ForeColor, new Rectangle(280, 47, 260, 30));
+        DrawText(g, current == null ? "Buka game atau aplikasi" : current.App.Name, wideApp, ForeColor, new Rectangle(280, 47, 260, 36));
         string duration = ActivityTracker.Duration(current == null ? 0 : current.ActiveSeconds);
         if (theme == MonitorTheme.DotBlack) DotClock.Draw(g, duration, 282, 92, duration.Length > 8 ? 3.4f : 4.6f, reminder ? accent : ForeColor, scale);
-        else DrawText(g, duration, monoTime, reminder ? accent : ForeColor, new Rectangle(280, 86, 260, 42));
+        else DrawText(g, duration, duration.Length > 8 ? monoTime : wideDuration, reminder ? accent : ForeColor, new Rectangle(280, (int)(height * .32) - 8, 260, 52));
         double opened = current == null ? -1 : ActivityTracker.OpenDuration(current.App, DateTime.UtcNow);
-        DrawText(g, "DIBUKA  " + (opened < 0 ? "—" : ActivityTracker.Duration(opened)), small, muted, new Rectangle(280, 132, 260, 26));
-        if (fpsEnabled && current != null && fpsRules.Tracks(current.App)) DrawText(g, (fpsValue.HasValue ? Math.Round(fpsValue.Value).ToString("0") : "—") + " FPS", compact, accent, new Rectangle(280, 166, 260, 27));
-        using (var background = new SolidBrush(track)) g.FillRectangle(background, S(280), S(203), S(260), S(3));
-        if (current != null) using (var fill = new SolidBrush(accent)) g.FillRectangle(fill, S(280), S(203), S((int)(260 * current.ReminderProgress)), S(3));
-        PaintReminderAction(g, new Rectangle(280, 210, 260, 24));
+        int barY = height - 57;
+        DrawText(g, "DIBUKA  " + (opened < 0 ? "—" : ActivityTracker.Duration(opened)), mono, muted, new Rectangle(280, (int)(height * .54), 260, 26));
+        if (fpsEnabled && current != null && fpsRules.Tracks(current.App)) DrawText(g, (fpsValue.HasValue ? Math.Round(fpsValue.Value).ToString("0") : "—") + " FPS", compact, accent, new Rectangle(280, barY - 32, 130, 27));
+        else DrawText(g, "ISTIRAHAT", small, muted, new Rectangle(280, barY - 32, 130, 24));
+        DrawText(g, "60 MENIT", mono, muted, new Rectangle(430, barY - 32, 110, 24), true);
+        using (var background = new SolidBrush(track)) g.FillRectangle(background, S(280), S(barY), S(260), S(3));
+        if (current != null) using (var fill = new SolidBrush(accent)) g.FillRectangle(fill, S(280), S(barY), S((int)(260 * current.ReminderProgress)), S(3));
+        PaintReminderAction(g, new Rectangle(280, height - 43, 260, 24), barY);
         int col = (width - 600) / 3;
         string[] labels = { "RAM", "CPU", "GPU" };
         string[] loads = { data.MemoryValid ? data.Load + "%" : "—", data.Cpu.Load.HasValue ? data.Cpu.Load.Value.ToString("0") + "%" : "—", data.Gpu.Load.HasValue ? data.Gpu.Load.Value.ToString("0") + "%" : "—" };
         for (int i = 0; i < 3; i++) {
             int x = 580 + i * col;
             DrawText(g, labels[i], heading, muted, new Rectangle(x, 17, col, 25));
-            DrawText(g, loads[i], value, ForeColor, new Rectangle(x, 47, col, 36));
-            DrawText(g, i == 0 ? data.Used.ToString("0.0") + " GB" : i == 1 ? data.Cpu.Text : data.Gpu.Text, compact, muted, new Rectangle(x, 85, i == 2 ? col - 30 : col, 27));
-            if (i == 2) PlaceCoolingButton(x + col - 28, 85, 26);
+            DrawText(g, loads[i], wideValue, ForeColor, new Rectangle(x - 3, 41, col + 3, 50));
+            DrawText(g, i == 0 ? data.Used.ToString("0.0") + " GB" : i == 1 ? data.Cpu.Text : data.Gpu.Text, wideDetail, muted, new Rectangle(x, 97, i == 2 ? col - 30 : col, 28));
+            if (i == 2) PlaceCoolingButton(x + col - 28, 97, 26);
         }
-        int y = 128, index = 1;
+        DrawText(g, "PENYIMPANAN", small, muted, new Rectangle(580, 153, width - 600, 20));
+        int y = 184, index = 1;
+        int rowHeight = Math.Max(30, (height - (status ? 40 : 18) - y) / rows);
         foreach (Reading disk in data.Disks) {
-            DrawText(g, disk.Kind + " " + index++ + "  " + disk.Name, small, muted, new Rectangle(580, y, width - 675, 25));
-            DrawText(g, disk.Text, compact, ForeColor, new Rectangle(width - 90, y, 70, 25), true); y += 26;
+            DrawText(g, disk.Kind + " " + index++ + "  " + disk.Name, wideDisk, muted, new Rectangle(580, y, width - 675, 26));
+            DrawText(g, disk.Text, wideDetail, ForeColor, new Rectangle(width - 90, y, 70, 26), true); y += rowHeight;
         }
         if (data.Disks.Count == 0) DrawText(g, "SSD  —", small, muted, new Rectangle(580, y, width - 600, 25));
         if (lastPoll == DateTime.MinValue || !data.Cpu.Value.HasValue || transient != null) DrawText(g, StatusText(), small, muted, new Rectangle(580, height - 27, width - 600, 24));
@@ -646,6 +656,15 @@ sealed partial class MonitorWindow : Form
         using (var dialog = new SaveFileDialog { Filter = "Text file|*.txt", FileName = "MiniMonitor-diagnostik.txt" })
             if (dialog.ShowDialog(this) == DialogResult.OK) try { File.WriteAllText(dialog.FileName, (reader != null ? reader.Report(data) : "Sensor belum selesai dibuka.") + Environment.NewLine + "FPS enabled: " + fpsEnabled + " | " + fpsReader.Status + " | FPS " + (fpsValue.HasValue ? fpsValue.Value.ToString("0.0", CultureInfo.InvariantCulture) : "n/a")); } catch (Exception ex) { MessageBox.Show(this, ex.Message, Text); }
     }
+    void CaptureWindowLayout()
+    {
+        if (applyingLayout) return;
+        if (WindowState == FormWindowState.Normal) {
+            rememberedLocation = Location;
+            if (!overlay && windowInitialized) windowSize = ClientSize;
+        }
+        if (!overlay && WindowState != FormWindowState.Minimized) windowMaximized = WindowState == FormWindowState.Maximized;
+    }
     void ReadSettings()
     {
         StartPosition = FormStartPosition.Manual; var area = Screen.PrimaryScreen.WorkingArea; Location = new Point(area.Right - S(320), area.Top + S(30));
@@ -674,7 +693,7 @@ sealed partial class MonitorWindow : Form
         }
         catch { }
     }
-    void SaveSettings() { try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllLines(settingsPath, new[] { "windowWidth=" + windowSize.Width, "windowHeight=" + windowSize.Height, "windowMaximized=" + (windowMaximized ? "1" : "0"), "overlay=" + (overlay ? "1" : "0"), "pin=" + (pin ? "1" : "0"), "interval=" + interval, "x=" + Left, "y=" + Top, "opacity=" + overlayOpacity.ToString(CultureInfo.InvariantCulture), "clockSound=" + (clockSound ? "1" : "0"), "appSound=" + (appSound ? "1" : "0"), "keepMenuOpen=" + (keepMenuOpen ? "1" : "0"), "pixelReminder=" + (pixelReminder ? "1" : "0"), "theme=" + ThemeCatalog.Keys[(int)theme], "fpsEnabled=" + (fpsEnabled ? "1" : "0"), "launchers=" + launcherSlots.Serialize(), "fpsApps=" + fpsRules.Serialize() }); } catch { } }
+    void SaveSettings() { CaptureWindowLayout(); try { Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)); File.WriteAllLines(settingsPath, new[] { "windowWidth=" + windowSize.Width, "windowHeight=" + windowSize.Height, "windowMaximized=" + (windowMaximized ? "1" : "0"), "overlay=" + (overlay ? "1" : "0"), "pin=" + (pin ? "1" : "0"), "interval=" + interval, "x=" + rememberedLocation.X, "y=" + rememberedLocation.Y, "opacity=" + overlayOpacity.ToString(CultureInfo.InvariantCulture), "clockSound=" + (clockSound ? "1" : "0"), "appSound=" + (appSound ? "1" : "0"), "keepMenuOpen=" + (keepMenuOpen ? "1" : "0"), "pixelReminder=" + (pixelReminder ? "1" : "0"), "theme=" + ThemeCatalog.Keys[(int)theme], "fpsEnabled=" + (fpsEnabled ? "1" : "0"), "launchers=" + launcherSlots.Serialize(), "fpsApps=" + fpsRules.Serialize() }); } catch { } }
     async void HandleClosing(object sender, FormClosingEventArgs e)
     {
         if (mayClose) return; e.Cancel = true; if (closing) return; closing = true; StopFireworks(); timer.Stop(); clockTimer.Stop(); SaveSettings(); Invalidate(); if (!busy) await FinishClose();

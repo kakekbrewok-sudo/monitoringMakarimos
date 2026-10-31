@@ -44,24 +44,27 @@ sealed class LauncherButton : Button
 {
     public Color Surface, Ink, Border;
     public Bitmap AppImage;
+    bool hovered;
+    internal int IconSide { get { return Math.Max(12, Math.Min(hovered ? 38 : 32, Math.Min(Width, Height) - (hovered ? 4 : 10))); } }
     public LauncherButton()
     {
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
         FlatStyle = FlatStyle.Flat; FlatAppearance.BorderSize = 0;
         Cursor = Cursors.Hand; TabStop = true; AccessibleRole = AccessibleRole.PushButton;
     }
+    protected override void OnMouseEnter(EventArgs e) { hovered = true; Invalidate(); base.OnMouseEnter(e); }
+    protected override void OnMouseLeave(EventArgs e) { hovered = false; Invalidate(); base.OnMouseLeave(e); }
     protected override void OnPaint(PaintEventArgs e)
     {
         Graphics g = e.Graphics; g.Clear(Surface);
-        using (var pen = new Pen(Focused ? Ink : Border)) g.DrawRectangle(pen, 0, 0, Math.Max(0, Width - 1), Math.Max(0, Height - 1));
         if (AppImage != null) {
-            int side = Math.Max(12, Math.Min(32, Math.Min(Width, Height) - 10));
+            int side = IconSide;
             g.DrawImage(AppImage, new Rectangle((Width - side) / 2, (Height - side) / 2, side, side));
         } else {
             int cx = Width / 2, cy = Height / 2, arm = Math.Max(3, Math.Min(Width, Height) / 8);
             using (var pen = new Pen(Ink, Math.Max(1, Width / 32f))) { g.DrawLine(pen, cx - arm, cy, cx + arm, cy); g.DrawLine(pen, cx, cy - arm, cx, cy + arm); }
         }
-        if (Focused) ControlPaint.DrawFocusRectangle(g, Rectangle.Inflate(ClientRectangle, -4, -4), Ink, Surface);
+        if (Focused && ShowFocusCues) using (var pen = new Pen(Ink, 2)) g.DrawLine(pen, Width / 3, Height - 2, Width * 2 / 3, Height - 2);
     }
 }
 
@@ -92,10 +95,21 @@ sealed partial class MonitorWindow
     readonly LauncherSlots launcherSlots = new LauncherSlots();
     readonly LauncherButton[] launcherButtons = new LauncherButton[LauncherSlots.Count];
     readonly ContextMenuStrip launcherMenu = new ContextMenuStrip { ShowItemToolTips = false };
+    readonly ToolTip launcherTip = new ToolTip { InitialDelay = 180, ReshowDelay = 100, AutoPopDelay = 5000, ShowAlways = true, OwnerDraw = true };
     int launcherMenuIndex;
 
     void InitializeLauncher()
     {
+        launcherTip.Popup += (s, e) => {
+            Size text = TextRenderer.MeasureText(launcherTip.GetToolTip(e.AssociatedControl), SystemFonts.MessageBoxFont);
+            e.ToolTipSize = new Size(Math.Min(420, text.Width + 18), text.Height + 12);
+        };
+        launcherTip.Draw += (s, e) => {
+            var button = e.AssociatedControl as LauncherButton;
+            using (var fill = new SolidBrush(button == null ? BackColor : button.Surface)) e.Graphics.FillRectangle(fill, e.Bounds);
+            TextRenderer.DrawText(e.Graphics, e.ToolTipText, SystemFonts.MessageBoxFont, Rectangle.Inflate(e.Bounds, -9, -4), ForeColor,
+                TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+        };
         var open = new ToolStripMenuItem("Buka aplikasi", null, (s, e) => OpenLauncher(launcherMenuIndex));
         var change = new ToolStripMenuItem("Pilih aplikasi...", null, (s, e) => ChooseLauncher(launcherMenuIndex));
         var remove = new ToolStripMenuItem("Hapus dari Mini Monitor", null, (s, e) => SetLauncher(launcherMenuIndex, null));
@@ -139,6 +153,7 @@ sealed partial class MonitorWindow
         string path = launcherSlots[index];
         button.AppImage = path == null ? null : LauncherIcon.Read(path);
         button.AccessibleName = path == null ? "Tambah aplikasi favorit " + (index + 1) : "Buka " + Path.GetFileNameWithoutExtension(path);
+        launcherTip.SetToolTip(button, path == null ? "Tambah aplikasi" : Path.GetFileNameWithoutExtension(path));
         if (old != null) old.Dispose(); button.Invalidate();
     }
     void SetLauncher(int index, string path)
@@ -180,7 +195,7 @@ sealed partial class MonitorWindow
     }
     void DisposeLauncher()
     {
-        launcherMenu.Dispose();
+        launcherTip.Dispose(); launcherMenu.Dispose();
         foreach (LauncherButton button in launcherButtons) if (button != null && button.AppImage != null) { button.AppImage.Dispose(); button.AppImage = null; }
     }
 }

@@ -58,7 +58,7 @@ sealed class CoolingButton : Button
                 }
             }
         }
-        if (Focused) ControlPaint.DrawFocusRectangle(g, Rectangle.Inflate(ClientRectangle, -2, -2), ink, Surface);
+        if (Focused && ShowFocusCues) using (var pen = new Pen(ink, 2)) g.DrawLine(pen, Width / 3, Height - 2, Width * 2 / 3, Height - 2);
     }
 }
 
